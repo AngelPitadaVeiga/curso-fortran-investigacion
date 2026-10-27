@@ -61,7 +61,7 @@ Argumentos, matices y cuándo **no** usar Fortran: [00_propaganda](00_propaganda
 ## Instalación en tres líneas (Windows)
 
 1. Instala [MSYS2](https://www.msys2.org) y, en la terminal **MSYS2 UCRT64**:
-   `pacman -S mingw-w64-ucrt-x86_64-gcc-fortran mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-gnuplot make`
+   `pacman -S mingw-w64-ucrt-x86_64-gcc-fortran mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-gnuplot make diffutils`
 2. Añade `C:\msys64\ucrt64\bin` al `Path` de usuario.
 3. Instala [VS Code](https://code.visualstudio.com) y abre esta carpeta (acepta las extensiones recomendadas).
 

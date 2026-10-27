@@ -21,7 +21,7 @@ MSYS2 proporciona gfortran, make y gnuplot compilados para Windows.
    `pacman -Syu`. Después:
 
    ```bash
-   pacman -S mingw-w64-ucrt-x86_64-gcc-fortran mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-gnuplot make
+   pacman -S mingw-w64-ucrt-x86_64-gcc-fortran mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-gnuplot make diffutils
    ```
 
    | Paquete | Qué instala |
@@ -30,6 +30,7 @@ MSYS2 proporciona gfortran, make y gnuplot compilados para Windows.
    | `mingw-w64-ucrt-x86_64-make` | `mingw32-make.exe`, para usar desde PowerShell y VS Code |
    | `mingw-w64-ucrt-x86_64-gnuplot` | `gnuplot` |
    | `make` | `make`, para usar dentro de la terminal de MSYS2 |
+   | `diffutils` | `cmp` y `diff`, para comparar salidas (bloques 04 y 06) |
 
    Opcional: `mingw-w64-ucrt-x86_64-gcc` ya viene con el anterior y sirve
    para el C++ del bloque 00 (`g++`).

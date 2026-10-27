@@ -33,15 +33,19 @@ contains
         character(len=*), intent(in) :: archivo
         type(caja_plano), intent(out) :: caja
         real(real64), allocatable :: t(:), u(:, :)
-        real(real64) :: cx, cy, rx, ry
+        real(real64) :: cx, cy, rx, ry, u_fin(2)
         integer :: n_hechos, unidad, k
 
         ! 1) Transitorio: solo interesa el estado final.
         call integrar_rk(tab, prob, u0, h, nint(t_transitorio / h), opc, t, u, n_hechos)
         call comprobar(n_hechos, size(t) - 1, "el transitorio")
 
-        ! 2) Ciclo: se parte del estado final del transitorio.
-        call integrar_rk(tab, prob, u(:, n_hechos), h, nint(t_ciclo / h), opc, t, u, n_hechos)
+        ! 2) Ciclo: se parte del estado final del transitorio. Se copia antes
+        !    en u_fin: u es intent(out) allocatable en integrar_rk y se libera
+        !    al entrar, así que pasar u(:, n_hechos) a la vez como estado
+        !    inicial sería un solapamiento de argumentos (prohibido).
+        u_fin = u(:, n_hechos)
+        call integrar_rk(tab, prob, u_fin, h, nint(t_ciclo / h), opc, t, u, n_hechos)
         call comprobar(n_hechos, size(t) - 1, "el ciclo limite")
 
         open(newunit=unidad, file=archivo, status="replace", action="write")
