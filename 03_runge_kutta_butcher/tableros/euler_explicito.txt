@@ -1,0 +1,13 @@
+# Euler explícito (orden 1).
+#
+#   0 | 0
+#   --+--
+#     | 1
+#
+# Formato: nombre, s, orden, s filas de A, fila b, fila c.
+Euler explicito
+1
+1
+0.0
+1.0
+0.0
