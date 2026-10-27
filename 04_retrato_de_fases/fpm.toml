@@ -1,0 +1,29 @@
+# Paquete fpm del bloque 04.  Uso:  fpm run   (o  fpm run -- otro.nml)
+# Reutiliza el solver del bloque 03 (y, a través de él, el modelo del
+# bloque 02) como dependencia local: no se copia ningún fuente.
+name = "retrato_de_fases"
+version = "1.0.0"
+license = "MIT"
+author = "[TU NOMBRE]"
+description = "Curso de Fortran - bloque 04: retratos de fases de la ecuacion de Lienard"
+
+[build]
+auto-executables = false
+auto-tests = false
+auto-examples = false
+
+[fortran]
+implicit-typing = false
+implicit-external = false
+source-form = "free"
+
+[library]
+source-dir = "src"
+
+[dependencies]
+rk_butcher = { path = "../03_runge_kutta_butcher" }
+
+[[executable]]
+name = "retrato"
+source-dir = "app"
+main = "principal.f90"
