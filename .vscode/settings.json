@@ -1,0 +1,46 @@
+{
+    // Ajustes recomendados para la extensión "Modern Fortran" (fortran-lang.linter-gfortran).
+
+    // Servidor de lenguaje fortls (instalado con: pip install fortls).
+    // Da autocompletado, ir a la definición, información al pasar el ratón, etc.
+    "fortran.fortls.path": "fortls",
+
+    // Linter: compila en segundo plano con gfortran y marca errores y avisos.
+    "fortran.linter.compiler": "gfortran",
+    "fortran.linter.extraArgs": ["-Wall", "-Wextra", "-std=f2018", "-fimplicit-none"],
+    // Los .mod que genera el linter van a una carpeta aparte (ignorada por git).
+    "fortran.linter.modOutput": "${workspaceFolder}/.vscode/mod",
+    "fortran.linter.includePaths": [
+        "${workspaceFolder}/.vscode/mod",
+        "${workspaceFolder}/**/build/release"
+    ],
+
+    // Escribir las palabras clave en minúsculas.
+    "fortran.preferredCase": "lowercase",
+
+    // .f y .for son formato fijo (FORTRAN 77); .f90 y posteriores, forma libre.
+    "files.associations": {
+        "*.f": "FortranFixedForm",
+        "*.for": "FortranFixedForm",
+        "*.f90": "FortranFreeForm",
+        "*.gp": "gnuplot"
+    },
+
+    "[FortranFreeForm]": {
+        "editor.rulers": [132],
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true
+    },
+    "[FortranFixedForm]": {
+        // Columnas 6 y 72: límites del formato fijo.
+        "editor.rulers": [6, 72]
+    },
+    "[makefile]": {
+        // Las recetas de un Makefile exigen tabuladores.
+        "editor.insertSpaces": false
+    },
+
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true
+}

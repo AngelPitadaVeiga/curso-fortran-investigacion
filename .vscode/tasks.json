@@ -1,0 +1,66 @@
+{
+    // Tareas del curso. Ctrl+Shift+B ejecuta la tarea por defecto:
+    // compila (release) y ejecuta el bloque del archivo que tengas abierto.
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar y ejecutar bloque",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                         "${workspaceFolder}/.vscode/bloque.ps1", "${fileDirname}", "run"]
+            },
+            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "run"] },
+            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "run"] },
+            "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Compilar bloque (debug)",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                         "${workspaceFolder}/.vscode/bloque.ps1", "${fileDirname}", "debug"]
+            },
+            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "debug"] },
+            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "debug"] },
+            "group": "build",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Dibujar resultados del bloque (make plot)",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                         "${workspaceFolder}/.vscode/bloque.ps1", "${fileDirname}", "plot"]
+            },
+            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "plot"] },
+            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "plot"] },
+            "problemMatcher": []
+        },
+        {
+            "label": "Limpiar bloque (make clean)",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                         "${workspaceFolder}/.vscode/bloque.ps1", "${fileDirname}", "clean"]
+            },
+            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "clean"] },
+            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "clean"] },
+            "problemMatcher": []
+        },
+        {
+            // Para programas de un solo archivo (00_instalacion, 01_hola_mundo).
+            "label": "Compilar y ejecutar archivo suelto",
+            "type": "shell",
+            "command": "gfortran -Wall ${fileBasename} -o ${fileBasenameNoExtension}; ./${fileBasenameNoExtension}",
+            "options": { "cwd": "${fileDirname}" },
+            "group": "build",
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}

@@ -1,0 +1,38 @@
+# Objetos y módulos compilados
+*.o
+*.obj
+*.mod
+*.smod
+
+# Ejecutables
+*.exe
+*.out
+01_hola_mundo/hola
+01_hola_mundo/ejercicio
+00_instalacion/comprobacion
+02_euler_lienard/euler
+02_euler_lienard/euler_debug
+02_euler_lienard/error_indice
+02_euler_lienard/error_indice_debug
+03_runge_kutta_butcher/rk_butcher
+03_runge_kutta_butcher/rk_butcher_debug
+03_runge_kutta_butcher/convergencia_rk
+03_runge_kutta_butcher/convergencia_rk_debug
+04_retrato_de_fases/retrato
+04_retrato_de_fases/retrato_debug
+05_propaganda/bin/
+06_fortran_legado/legado_f77
+06_fortran_legado/moderno
+
+# Carpetas de compilación y resultados
+build/
+resultados/
+
+# Python, Julia, Matlab
+__pycache__/
+*.pyc
+Manifest.toml
+
+# Varios
+.vscode/mod/
+*.swp
