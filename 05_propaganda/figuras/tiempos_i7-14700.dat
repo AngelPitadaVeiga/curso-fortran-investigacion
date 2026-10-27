@@ -1,0 +1,21 @@
+# Benchmark Van der Pol + RK4 (mu = 1, h = 0.01, 1000 pasos por trayectoria)
+# CPU: Intel(R) Core(TM) i7-14700
+# Sistema: MINGW64_NT-10.0-26200 3.6.9-b4195d69.x86_64
+# Fecha: 2026-10-27 21:23
+# gfortran: GNU Fortran (GCC) 14.2.0
+# g++: g++.exe (GCC) 14.2.0
+# python: Python 3.14.3
+# Matlab 25.2.0.3150157 (R2025b) Update 4
+# lenguaje                     ns_por_paso   relativo_a_Fortran   suma_por_trayectoria     N
+"Fortran"                           7.846             1.00     -1.426349181028050e-03   100000
+"Fortran-vectorial"                 7.799             0.99     -1.426349181028050e-03   100000
+"C++"                               7.600             0.97     -1.426349181028106e-03   100000
+"Python"                          652.657            83.18     -1.426349181028087e-03     1000
+"Matlab"                           13.558             1.73     -1.426349181028085e-03    20000
+"Matlab-funcion-anonima"          359.311            45.79     -1.426349181028064e-03     1000
+# suma de control Fortran                   : coincide (diferencia relativa 0.0e+00)
+# suma de control Fortran-vectorial         : coincide (diferencia relativa 0.0e+00)
+# suma de control C++                       : coincide (diferencia relativa 3.9e-14)
+# suma de control Python                    : coincide (diferencia relativa 2.6e-14)
+# suma de control Matlab                    : coincide (diferencia relativa 2.5e-14)
+# suma de control Matlab-funcion-anonima    : coincide (diferencia relativa 9.9e-15)
