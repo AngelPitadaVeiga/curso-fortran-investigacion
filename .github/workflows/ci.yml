@@ -1,0 +1,61 @@
+# Integración continua: compila todos los bloques, ejecuta casos cortos y el
+# test de convergencia (falla si algún orden observado se desvía del teórico).
+# El benchmark del bloque 05 no se ejecuta. No se instala gnuplot: los
+# programas deben funcionar sin él.
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: Linux (gfortran)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar gfortran y make
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran g++ make
+          gfortran --version
+
+      - name: Compilar y comprobar todos los bloques
+        run: bash .github/comprobar_todo.sh
+
+  windows:
+    name: Windows (MSYS2 UCRT64)
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar MSYS2 UCRT64
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            make
+            mingw-w64-ucrt-x86_64-gcc-fortran
+            mingw-w64-ucrt-x86_64-make
+
+      - name: Compilar y comprobar todos los bloques
+        run: |
+          gfortran --version
+          bash .github/comprobar_todo.sh
+
+      # Como lo usarán los alumnos: mingw32-make lanzado desde cmd.exe con
+      # C:\msys64\ucrt64\bin en el PATH (sin la terminal de MSYS2).
+      - name: Bloque 02 con mingw32-make desde cmd
+        shell: cmd
+        run: |
+          set PATH=${{ steps.msys2.outputs.msys2-location }}\ucrt64\bin;%PATH%
+          mingw32-make -C 02_euler_lienard clean
+          mingw32-make -C 02_euler_lienard run
+          mingw32-make -C 02_euler_lienard clean

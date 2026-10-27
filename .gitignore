@@ -26,6 +26,7 @@
 
 # Carpetas de compilación y resultados
 build/
+build_ci/
 resultados/
 
 # Python, Julia, Matlab
