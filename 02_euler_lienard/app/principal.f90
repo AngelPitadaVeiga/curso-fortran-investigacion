@@ -53,12 +53,12 @@ contains
              iostat=estado, iomsg=mensaje)
         if (estado /= 0) then
             print '(a)', 'Error: no puedo abrir ' // trim(archivo_entrada) // ': ' // trim(mensaje)
-            error stop 1
+            stop 1
         end if
         read(unidad, nml=parametros, iostat=estado, iomsg=mensaje)
         if (estado /= 0) then
             print '(a)', 'Error leyendo el namelist &parametros: ' // trim(mensaje)
-            error stop 1
+            stop 1
         end if
         close(unidad)
         print '(a)', 'Parametros leidos de ' // trim(archivo_entrada)

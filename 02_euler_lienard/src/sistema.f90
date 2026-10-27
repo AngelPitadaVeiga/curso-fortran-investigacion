@@ -6,6 +6,7 @@
 !> Como la sintaxis de ambos difiere, se detecta el sistema con la variable
 !> de entorno OS, que en Windows vale "Windows_NT".
 module sistema
+    use, intrinsic :: iso_fortran_env, only: output_unit
     implicit none
     private
 
@@ -83,6 +84,7 @@ contains
             return
         end if
 
+        flush(output_unit)      ! que lo ya impreso salga antes que lo de gnuplot
         call execute_command_line('gnuplot -e "' // variables // '" ' // script, &
                                   exitstat=estado, cmdstat=estado_cmd)
         if (estado_cmd /= 0 .or. estado /= 0) then
