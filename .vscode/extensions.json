@@ -3,11 +3,11 @@
     "recommendations": [
         // Modern Fortran: resaltado, linter con gfortran, fortls y depuración.
         "fortran-lang.linter-gfortran",
-        // C/C++: depurador gdb (lo usa Modern Fortran para depurar) y el C++ del bloque 05.
+        // C/C++: depurador gdb (lo usa Modern Fortran para depurar) y el C++ del bloque 00.
         "ms-vscode.cpptools",
         // Resaltado de sintaxis para los scripts de gnuplot (.gp).
         "mammothb.gnuplot",
-        // Opcional: Julia (bloques 04 y 05).
+        // Opcional: Julia (bloques 00 y 05).
         "julialang.language-julia"
     ]
 }

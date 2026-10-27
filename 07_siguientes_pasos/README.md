@@ -7,7 +7,7 @@ y enlaces por tema.
 
 Compila sin Makefile (resuelve solo el orden de los módulos), gestiona
 dependencias (otros repositorios de git o carpetas locales, como en los
-bloques 03 y 04), ejecuta tests y crea proyectos nuevos:
+bloques 04 y 05), ejecuta tests y crea proyectos nuevos:
 
 ```bash
 fpm new mi_proyecto     # crea src/, app/, test/ y fpm.toml
@@ -87,7 +87,7 @@ La biblioteca con `bind(c)` también se puede cargar desde Python con
 ## LAPACK
 
 No escribáis vuestra eliminación gaussiana (salvo para aprender, como en el
-bloque 03). LAPACK resuelve sistemas lineales (`dgesv`), mínimos cuadrados
+bloque 04). LAPACK resuelve sistemas lineales (`dgesv`), mínimos cuadrados
 (`dgels`), autovalores (`dsyev`, `dgeev`), SVD (`dgesvd`)... Las rutinas se
 llaman directamente desde Fortran y se enlaza con `-llapack -lblas` (o con
 OpenBLAS, que incluye LAPACK: `-lopenblas`). En MSYS2: `pacman -S mingw-w64-ucrt-x86_64-openblas`.
@@ -109,7 +109,7 @@ call dgesv(n, 1, a, n, ipiv, b, n, info)   ! resuelve a*x = b; x queda en b
 | MPI | distribuida | biblioteca (`use mpi_f08`); varios procesos que intercambian mensajes | varios nodos de un clúster |
 | Coarrays | distribuida | parte del lenguaje (Fortran 2008) | alternativa a MPI integrada en el lenguaje |
 
-Ejemplo inmediato con el benchmark del bloque 05: las N trayectorias son
+Ejemplo inmediato con el benchmark del bloque 00: las N trayectorias son
 independientes.
 
 ```fortran

@@ -1,0 +1,37 @@
+# Paquete fpm del bloque 04.
+#   fpm run rk_butcher                                   (entrada.nml)
+#   fpm run rk_butcher -- entrada_rigido.nml tableros/radau_iia3.txt
+#   fpm run convergencia_rk
+# El modelo y las utilidades se toman del bloque 03 como dependencia local:
+# fpm compila ../03_euler_lienard/src sin copiar ningún archivo.
+name = "rk_butcher"
+version = "1.0.0"
+license = "MIT"
+author = "[TU NOMBRE]"
+description = "Curso de Fortran - bloque 04: Runge-Kutta general con tableros de Butcher"
+
+[build]
+auto-executables = false
+auto-tests = false
+auto-examples = false
+
+[fortran]
+implicit-typing = false
+implicit-external = false
+source-form = "free"
+
+[library]
+source-dir = "src"
+
+[dependencies]
+euler_lienard = { path = "../03_euler_lienard" }
+
+[[executable]]
+name = "rk_butcher"
+source-dir = "app"
+main = "principal.f90"
+
+[[executable]]
+name = "convergencia_rk"
+source-dir = "convergencia"
+main = "convergencia.f90"

@@ -54,7 +54,7 @@
             "problemMatcher": []
         },
         {
-            // Para programas de un solo archivo (00_instalacion, 01_hola_mundo).
+            // Para programas de un solo archivo (01_instalacion, 02_hola_mundo).
             "label": "Compilar y ejecutar archivo suelto",
             "type": "shell",
             "command": "gfortran -Wall ${fileBasename} -o ${fileBasenameNoExtension}; ./${fileBasenameNoExtension}",

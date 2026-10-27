@@ -12,7 +12,7 @@ while ($dir -and -not (Test-Path (Join-Path $dir.FullName "Makefile"))) {
 }
 if (-not $dir) {
     Write-Host "No se encontro ningun Makefile por encima de $Carpeta."
-    Write-Host "Abre un archivo de un bloque (02, 03, 04, 06...) o usa la tarea 'Compilar archivo suelto'."
+    Write-Host "Abre un archivo de un bloque (03, 04, 05, 06...) o usa la tarea 'Compilar archivo suelto'."
     exit 1
 }
 

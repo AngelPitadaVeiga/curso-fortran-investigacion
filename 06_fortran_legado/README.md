@@ -14,7 +14,7 @@ make run      # compila legado.f y moderno.f90, los ejecuta y compara sus salida
 | `moderno.f90` | la misma rutina en Fortran moderno, con comentarios `F77:` que indican qué sustituye cada cosa |
 
 Las dos versiones dan una salida **idéntica, carácter a carácter** (también
-con `-O3 -march=native`), y el estado final coincide con el RK4 del bloque 03.
+con `-O3 -march=native`), y el estado final coincide con el RK4 del bloque 04.
 
 ## Guía rápida para leer FORTRAN 77
 
@@ -69,7 +69,7 @@ que hace dobles todas las que no empiezan por I–N. Peligro: una errata
 ### Un detalle numérico que conviene respetar
 
 `legado.f` avanza el tiempo con `T = T + H`, que acumula redondeo (en el
-bloque 02 se usa `t = k*h`). La traducción **conserva** `t = t + h` a
+bloque 03 se usa `t = k*h`). La traducción **conserva** `t = t + h` a
 propósito: el objetivo de una traducción es reproducir el resultado
 original; las mejoras numéricas van después, en un cambio aparte y
 comprobando su efecto.

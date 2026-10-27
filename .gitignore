@@ -7,20 +7,20 @@
 # Ejecutables
 *.exe
 *.out
-01_hola_mundo/hola
-01_hola_mundo/ejercicio
-00_instalacion/comprobacion
-02_euler_lienard/euler
-02_euler_lienard/euler_debug
-02_euler_lienard/error_indice
-02_euler_lienard/error_indice_debug
-03_runge_kutta_butcher/rk_butcher
-03_runge_kutta_butcher/rk_butcher_debug
-03_runge_kutta_butcher/convergencia_rk
-03_runge_kutta_butcher/convergencia_rk_debug
-04_retrato_de_fases/retrato
-04_retrato_de_fases/retrato_debug
-05_propaganda/bin/
+02_hola_mundo/hola
+02_hola_mundo/ejercicio
+01_instalacion/comprobacion
+03_euler_lienard/euler
+03_euler_lienard/euler_debug
+03_euler_lienard/error_indice
+03_euler_lienard/error_indice_debug
+04_runge_kutta_butcher/rk_butcher
+04_runge_kutta_butcher/rk_butcher_debug
+04_runge_kutta_butcher/convergencia_rk
+04_runge_kutta_butcher/convergencia_rk_debug
+05_retrato_de_fases/retrato
+05_retrato_de_fases/retrato_debug
+00_propaganda/bin/
 06_fortran_legado/legado_f77
 06_fortran_legado/moderno
 

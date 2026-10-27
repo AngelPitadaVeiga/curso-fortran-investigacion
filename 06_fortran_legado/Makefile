@@ -15,7 +15,7 @@ else
   FFLAGS = -O3 -march=native
 endif
 
-# Portabilidad Windows / Linux (véase el Makefile del bloque 02)
+# Portabilidad Windows / Linux (véase el Makefile del bloque 03)
 ifeq ($(OS),Windows_NT)
   EXE = .exe
   ifeq ($(findstring /,$(SHELL)),)
