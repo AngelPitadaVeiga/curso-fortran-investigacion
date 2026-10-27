@@ -91,7 +91,7 @@ mismo algoritmo y bucles explícitos en todos los lenguajes. Tiempo por paso
   vectores) va **igual de rápido** que el escalar: es **fácil escribir
   código rápido y difícil escribirlo lento**.
 - Sin latencia de JIT; un lenguaje vivo desde 1957 con un estándar ISO
-  muy estable (el FORTRAN 77 de hace 45 años sigue compilando); y BLAS/LAPACK,
+  muy estable (el FORTRAN 77 de hace casi 50 años sigue compilando); y BLAS/LAPACK,
   la base del álgebra lineal de Julia, NumPy y Matlab, nacieron en Fortran.
 
 Argumentos, matices y cuándo **no** usar Fortran: [05_propaganda](05_propaganda/).
