@@ -1,6 +1,6 @@
 # Curso introductorio de FORTRAN orientado a la investigación
 
-**[TU NOMBRE]** · Universidade de Santiago de Compostela (USC) y CITMAGA
+**Ángel Pita da Veiga Ramonde** · Universidade de Santiago de Compostela (USC) y CITMAGA
 
 Curso práctico de unas 4 horas para investigadores que programan en Julia,
 C++ o Matlab y parten de cero en Fortran. El hilo conductor es un problema

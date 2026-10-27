@@ -4,7 +4,7 @@
 name = "euler_lienard"
 version = "1.0.0"
 license = "MIT"
-author = "[TU NOMBRE]"
+author = "Ángel Pita da Veiga Ramonde"
 description = "Curso de Fortran - bloque 03: Euler explicito para la ecuacion de Lienard"
 
 [build]

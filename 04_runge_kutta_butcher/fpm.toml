@@ -7,7 +7,7 @@
 name = "rk_butcher"
 version = "1.0.0"
 license = "MIT"
-author = "[TU NOMBRE]"
+author = "Ángel Pita da Veiga Ramonde"
 description = "Curso de Fortran - bloque 04: Runge-Kutta general con tableros de Butcher"
 
 [build]
