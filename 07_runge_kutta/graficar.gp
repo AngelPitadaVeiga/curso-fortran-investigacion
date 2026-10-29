@@ -1,11 +1,11 @@
-# Dibuja una solución del bloque 04: x(t) y la órbita en el plano (x, y).
+# Dibuja la solución del bloque 07: x(t) y la órbita en el plano (x, y).
 # Uso:  gnuplot graficar.gp
-#       gnuplot -e "archivo='resultados/radau_iia3.dat'; titulo='Radau IIA'" graficar.gp
+#       gnuplot -e "archivo='resultados/otro.dat'" graficar.gp
 
-if (!exists("archivo")) archivo = 'resultados/rk4.dat'
-if (!exists("titulo")) titulo = 'Runge-Kutta'
+if (!exists("archivo")) archivo = 'resultados/rk.dat'
 salida = archivo[1:strlen(archivo)-4] . '.png'
 
+# pngcairo da mejor calidad; si no está disponible, se usa png.
 if (strstrt(GPVAL_TERMINALS, "pngcairo") > 0) {
     set terminal pngcairo size 1200,500 enhanced font "Arial,11"
 } else {
@@ -13,7 +13,7 @@ if (strstrt(GPVAL_TERMINALS, "pngcairo") > 0) {
 }
 set output salida
 
-set multiplot layout 1,2 title "Lienard (Van der Pol) - " . titulo
+set multiplot layout 1,2 title "Van der Pol - Runge-Kutta"
 
 set title "x(t)"
 set xlabel "t"
