@@ -7,7 +7,7 @@
         "ms-vscode.cpptools",
         // Resaltado de sintaxis para los scripts de gnuplot (.gp).
         "mammothb.gnuplot",
-        // Opcional: Julia (bloques 00 y 05).
+        // Opcional: Julia (benchmark del bloque 00).
         "julialang.language-julia"
     ]
 }

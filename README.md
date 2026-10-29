@@ -2,13 +2,16 @@
 
 **Ángel Pita da Veiga Ramonde** · Universidade de Santiago de Compostela (USC) y CITMAGA
 
-Curso práctico de unas 4 horas para investigadores que programan en Julia,
-C++ o Matlab y parten de cero en Fortran. El hilo conductor es un problema
-de sistemas dinámicos: la **ecuación de Liénard** (Van der Pol), que
-integramos con Euler, después con **cualquier Runge–Kutta** definido por su
-tablero de Butcher (explícito o implícito) y, por último, dibujamos sus
-**retratos de fases**. Por el camino: Fortran moderno, rendimiento medido
-con datos y cómo leer código heredado. Empezamos por el final: **por qué merece la pena**.
+Curso práctico de **dos sesiones de dos horas** para investigadores que
+programan en Julia, C++ o Matlab y parten de cero en Fortran. Es
+**progresivo**: cada bloque añade uno o dos conceptos al anterior y el
+código crece poco a poco, desde el hola mundo hasta un integrador de
+Runge–Kutta implícito. El hilo conductor es un problema de sistemas
+dinámicos, el **oscilador de Van der Pol** (ecuación de Liénard), que
+integramos con Euler, después con cualquier Runge–Kutta definido por su
+tablero de Butcher, dibujamos su **retrato de fases** y, por último,
+resolvemos en su versión **rígida**. Empezamos por el final: **por qué
+merece la pena**.
 
 ## La propaganda, en una gráfica
 
@@ -34,29 +37,48 @@ Argumentos, matices y cuándo **no** usar Fortran: [00_propaganda](00_propaganda
 
 ## Índice
 
-| Bloque | Contenido |
-|---|---|
-| [00 · Propaganda (con datos)](00_propaganda/) | por qué Fortran: benchmark en 6 lenguajes, aliasing, expresividad, cuándo no usarlo |
-| [01 · Instalación](01_instalacion/) | MSYS2 (UCRT64), gfortran, make, gnuplot, VS Code, fortls, fpm |
-| [02 · Hola, mundo](02_hola_mundo/) | `program`, `implicit none`, `print`; compilar a mano y desde VS Code |
-| [03 · Euler para Liénard](03_euler_lienard/) | módulos, `real64`, `intent`, `namelist`, release frente a debug |
-| [04 · Runge–Kutta con tableros de Butcher](04_runge_kutta_butcher/) | tipos derivados, interfaces abstractas, Newton, rigidez, convergencia |
-| [05 · Retratos de fases](05_retrato_de_fases/) | reutilización de módulos, datos para graficar, figuras multipanel |
-| [06 · Fortran heredado](06_fortran_legado/) | leer y modernizar FORTRAN 77 |
-| [07 · Siguientes pasos](07_siguientes_pasos/) | fpm, C/Julia/Python, LAPACK, OpenMP/MPI, libros |
+### Sesión 1 · Del hola mundo a la primera simulación
 
-## Reparto orientativo (4 h)
+Programas de **un solo archivo**, compilados a mano con `gfortran`.
 
-| Hora | Bloque |
-|---|---|
-| 0:00 | Propaganda (00) |
-| 0:20 | Instalación (01) + hola mundo (02) |
-| 0:45 | Euler para Liénard (03) |
-| 1:30 | *Descanso* |
-| 1:40 | Runge–Kutta con tableros de Butcher (04) |
-| 2:45 | Retratos de fases (05) |
-| 3:20 | Benchmark en vivo (00) + Fortran heredado (06) |
-| 3:45 | Siguientes pasos (07) |
+| Bloque | Qué se hace | Qué se aprende |
+|---|---|---|
+| [00 · Propaganda](00_propaganda/) | por qué Fortran, con datos | benchmark en 6 lenguajes, aliasing, cuándo no usarlo |
+| [01 · Instalación](01_instalacion/) | MSYS2, gfortran, make, gnuplot, VS Code | comprobar que todo funciona |
+| [02 · Hola, mundo](02_hola_mundo/) | el primer programa | `program`, `implicit none`, `print`, compilar |
+| [03 · Variables y bucles](03_variables_y_bucles/) | tipos y raíz cuadrada por Herón | `real64`, `parameter`, `do`, `exit`, `if`, formatos |
+| [04 · Arrays y archivos](04_arrays_y_archivos/) | operaciones con arrays; una tabla para gnuplot | cortes, `matmul`, `allocatable`, por columnas, `open`/`write` |
+| [05 · Euler en un archivo](05_euler_un_archivo/) | Van der Pol con Euler explícito | funciones, `contains`, `intent`, el estado como array |
+
+### Sesión 2 · Del script al código de investigación
+
+Proyectos con **módulos**, archivo de entrada y `Makefile`.
+
+| Bloque | Qué se hace | Qué se aprende |
+|---|---|---|
+| [06 · Módulos y make](06_modulos_y_make/) | el mismo Euler, organizado | módulos, `namelist`, compilación separada, release frente a debug |
+| [07 · Runge–Kutta](07_runge_kutta/) | cualquier RK explícito leído de un archivo; orden de convergencia | tipos derivados, componentes `allocatable`, `matmul` |
+| [08 · Retrato de fases](08_retrato_de_fases/) | campo, trayectorias, nulclinas y ciclo límite | reutilizar módulos, cortes con paso, solapamiento de argumentos |
+| [09 · Rigidez](09_rigidez/) | `mu = 1000`: RK4 explota, Radau IIA no | RK implícitos con Newton, argumentos opcionales, `ieee_arithmetic` |
+
+Los bloques 05, 06 y 07 calculan **exactamente lo mismo** con Euler (bit
+a bit, lo comprueba la integración continua): cada uno reorganiza o
+generaliza el anterior sin cambiar el resultado.
+
+## Reparto orientativo
+
+| Sesión 1 | | Sesión 2 | |
+|---|---|---|---|
+| 0:00 | Propaganda (00) | 0:00 | Módulos, namelist y make (06) |
+| 0:15 | Instalación (01), comprobación | 0:35 | Runge–Kutta y convergencia (07) |
+| 0:25 | Hola, mundo (02) | 1:10 | *Descanso* |
+| 0:35 | Variables y bucles (03) | 1:20 | Retrato de fases (08) |
+| 1:00 | *Descanso* | 1:45 | Rigidez (09), como demostración |
+| 1:10 | Arrays y archivos (04) | 1:55 | Preguntas; benchmark en vivo (00) |
+| 1:35 | Euler en un archivo (05) | | |
+
+Conviene pedir a los asistentes que hagan la instalación (bloque 01)
+**antes** de la primera sesión: en clase solo se comprueba.
 
 ## Instalación en tres líneas (Windows)
 
@@ -67,20 +89,29 @@ Argumentos, matices y cuándo **no** usar Fortran: [00_propaganda](00_propaganda
 
 Detalles, alternativas (WSL, Linux, macOS, Intel `ifx`) y problemas frecuentes en [01_instalacion](01_instalacion/).
 
-## Compilar y ejecutar cualquier bloque
+## Compilar y ejecutar
+
+**Bloques 02 a 05** (un archivo):
 
 ```bash
-cd 03_euler_lienard
-make run          # compila en modo release y ejecuta con entrada.nml
+gfortran -Wall heron.f90 -o heron
+./heron
+```
+
+**Bloques 06 a 09** (con `Makefile`):
+
+```bash
+cd 07_runge_kutta
+make run          # compila en modo release, ejecuta con entrada.nml y dibuja
 make debug        # compila con todas las comprobaciones
 make plot         # vuelve a dibujar con gnuplot
 make clean
 ```
 
-En PowerShell, `mingw32-make` en lugar de `make`. En VS Code, **Ctrl+Shift+B**
-compila y ejecuta el bloque del archivo abierto. Cada bloque (03–05) trae
-también un `fpm.toml`: `fpm run`. Los parámetros se leen de `entrada.nml`
-o del archivo que se pase como argumento: `./euler otro.nml`.
+En PowerShell, `mingw32-make` en lugar de `make`. En **VS Code**,
+**Ctrl+Shift+B** con cualquier archivo abierto: si el bloque tiene
+`Makefile`, hace `make run`; si no, compila y ejecuta el archivo abierto.
+Los bloques 06–09 traen también un `fpm.toml` (`fpm run`).
 
 ## Fortran frente a C++, Julia y Matlab
 
@@ -98,11 +129,23 @@ o del archivo que se pase como argumento: `./euler otro.nml`.
 
 ## Integración continua
 
-Cada `push` compila todos los bloques en Linux y en Windows (MSYS2 UCRT64),
-ejecuta casos cortos y el test de convergencia de los Runge–Kutta, que falla
-si algún orden observado se desvía del teórico
-([`.github/workflows/ci.yml`](.github/workflows/ci.yml)). En local:
-`bash .github/comprobar_todo.sh`.
+Cada `push` compila y ejecuta todos los bloques en Linux y en Windows
+(MSYS2 UCRT64), comprueba que los Euler de los bloques 05, 06 y 07
+coinciden bit a bit, que las copias de los módulos compartidos no se han
+separado y que los órdenes de convergencia de todos los Runge–Kutta son
+los teóricos ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+En local: `bash .github/comprobar_todo.sh`.
+
+## Para seguir aprendiendo
+
+- **fortran-lang.org**: tutoriales, compiladores, paquetes (fpm, stdlib):
+  <https://fortran-lang.org>. Foro: <https://fortran-lang.discourse.group>.
+- M. Metcalf, J. Reid, M. Cohen y R. Bader, *Modern Fortran Explained:
+  Incorporating Fortran 2023*, Oxford University Press, 2023.
+- M. Curcic, *Modern Fortran: Building Efficient Parallel Applications*, Manning, 2020.
+- E. Hairer, S. P. Nørsett y G. Wanner, *Solving Ordinary Differential
+  Equations I* y *II*, Springer; sus códigos (DOPRI5, RADAU5...) están en
+  Fortran: <http://www.unige.ch/~hairer/software.html>.
 
 ## Licencia
 

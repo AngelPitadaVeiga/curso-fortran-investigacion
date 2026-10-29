@@ -30,7 +30,7 @@ MSYS2 proporciona gfortran, make y gnuplot compilados para Windows.
    | `mingw-w64-ucrt-x86_64-make` | `mingw32-make.exe`, para usar desde PowerShell y VS Code |
    | `mingw-w64-ucrt-x86_64-gnuplot` | `gnuplot` |
    | `make` | `make`, para usar dentro de la terminal de MSYS2 |
-   | `diffutils` | `cmp` y `diff`, para comparar salidas (bloques 04 y 06) |
+   | `diffutils` | `cmp` y `diff`, para comparar salidas (comprobación completa del curso) |
 
    Opcional: `mingw-w64-ucrt-x86_64-gcc` ya viene con el anterior y sirve
    para el C++ del bloque 00 (`g++`).
@@ -113,7 +113,7 @@ Todo listo. Bienvenido a Fortran!
 **Si esto compila y ejecuta, estás listo.** Prueba también un bloque completo:
 
 ```powershell
-cd ..\03_euler_lienard
+cd ..\06_modulos_y_make
 mingw32-make run
 ```
 

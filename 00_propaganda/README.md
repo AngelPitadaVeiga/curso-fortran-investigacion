@@ -284,7 +284,7 @@ EISPACK, bibliotecas escritas en Fortran).
 | 2023 | Fortran 2023 (ISO/IEC 1539-1:2023, noviembre de 2023) | expresiones condicionales, `typeof`/`classof`, tipos enumerados; la siguiente revisión prepara plantillas genéricas |
 
 La compatibilidad hacia atrás es una prioridad del comité: un programa
-en FORTRAN 77 sigue compilando hoy con gfortran o ifx (véase el bloque 06).
+en FORTRAN 77 sigue compilando hoy con gfortran o ifx.
 Hay pocas características "borradas" (por ejemplo, contadores de bucle
 reales) y los compiladores las siguen aceptando con un aviso.
 
@@ -321,7 +321,7 @@ reales) y los compiladores las siguen aceptando con un aviso.
   a partir del código Fortran.
 - Con **C++**: a través de la interfaz C (`extern "C"`).
 
-Véase el bloque 07 para ejemplos y enlaces.
+Ejemplos y enlaces: <https://fortran-lang.org/learn/>.
 
 ### Cuándo **no** usar Fortran
 
@@ -339,4 +339,4 @@ Véase el bloque 07 para ejemplos y enlaces.
 
 **Regla práctica**: el núcleo numérico que tarda horas, en Fortran (o C++,
 o Julia bien escrito); todo lo demás, donde sea más cómodo. Y conectarlos
-(bloque 07).
+(`iso_c_binding`, `ccall`, `f2py`).

@@ -1,6 +1,7 @@
 # Integración continua: compila todos los bloques, ejecuta casos cortos y el
-# test de convergencia (falla si algún orden observado se desvía del teórico).
-# El benchmark del bloque 00 no se ejecuta. No se instala gnuplot: los
+# test de convergencia (falla si algún orden observado se desvía del teórico)
+# y comprueba que los Euler de los bloques 05, 06 y 07 coinciden bit a bit.
+# El benchmark del bloque 00 solo se compila. No se instala gnuplot: los
 # programas deben funcionar sin él.
 name: CI
 
@@ -53,10 +54,13 @@ jobs:
 
       # Como lo usarán los alumnos: mingw32-make lanzado desde cmd.exe con
       # C:\msys64\ucrt64\bin en el PATH (sin la terminal de MSYS2).
-      - name: Bloque 03 con mingw32-make desde cmd
+      - name: Bloques 06 y 07 con mingw32-make desde cmd
         shell: cmd
         run: |
           set PATH=${{ steps.msys2.outputs.msys2-location }}\ucrt64\bin;%PATH%
-          mingw32-make -C 03_euler_lienard clean
-          mingw32-make -C 03_euler_lienard run
-          mingw32-make -C 03_euler_lienard clean
+          mingw32-make -C 06_modulos_y_make clean
+          mingw32-make -C 06_modulos_y_make run
+          mingw32-make -C 06_modulos_y_make clean
+          mingw32-make -C 07_runge_kutta clean
+          mingw32-make -C 07_runge_kutta convergencia
+          mingw32-make -C 07_runge_kutta clean

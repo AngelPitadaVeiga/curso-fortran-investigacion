@@ -1,6 +1,7 @@
 {
     // Tareas del curso. Ctrl+Shift+B ejecuta la tarea por defecto:
-    // compila (release) y ejecuta el bloque del archivo que tengas abierto.
+    // compila y ejecuta el bloque del archivo que tengas abierto (con make si
+    // el bloque tiene Makefile; si no, solo el archivo abierto).
     "version": "2.0.0",
     "tasks": [
         {
@@ -9,10 +10,10 @@
             "windows": {
                 "command": "powershell",
                 "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                         "${workspaceFolder}/.vscode/bloque.ps1", "${fileDirname}", "run"]
+                         "${workspaceFolder}/.vscode/bloque.ps1", "${file}", "run"]
             },
-            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "run"] },
-            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "run"] },
+            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${file}", "run"] },
+            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${file}", "run"] },
             "group": { "kind": "build", "isDefault": true },
             "problemMatcher": ["$gcc"]
         },
@@ -22,10 +23,10 @@
             "windows": {
                 "command": "powershell",
                 "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                         "${workspaceFolder}/.vscode/bloque.ps1", "${fileDirname}", "debug"]
+                         "${workspaceFolder}/.vscode/bloque.ps1", "${file}", "debug"]
             },
-            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "debug"] },
-            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "debug"] },
+            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${file}", "debug"] },
+            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${file}", "debug"] },
             "group": "build",
             "problemMatcher": ["$gcc"]
         },
@@ -35,10 +36,10 @@
             "windows": {
                 "command": "powershell",
                 "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                         "${workspaceFolder}/.vscode/bloque.ps1", "${fileDirname}", "plot"]
+                         "${workspaceFolder}/.vscode/bloque.ps1", "${file}", "plot"]
             },
-            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "plot"] },
-            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "plot"] },
+            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${file}", "plot"] },
+            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${file}", "plot"] },
             "problemMatcher": []
         },
         {
@@ -47,14 +48,14 @@
             "windows": {
                 "command": "powershell",
                 "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                         "${workspaceFolder}/.vscode/bloque.ps1", "${fileDirname}", "clean"]
+                         "${workspaceFolder}/.vscode/bloque.ps1", "${file}", "clean"]
             },
-            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "clean"] },
-            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${fileDirname}", "clean"] },
+            "linux": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${file}", "clean"] },
+            "osx": { "command": "bash", "args": ["${workspaceFolder}/.vscode/bloque.sh", "${file}", "clean"] },
             "problemMatcher": []
         },
         {
-            // Para programas de un solo archivo (01_instalacion, 02_hola_mundo).
+            // Compila y ejecuta solo el archivo abierto, aunque el bloque tenga Makefile.
             "label": "Compilar y ejecutar archivo suelto",
             "type": "shell",
             "command": "gfortran -Wall ${fileBasename} -o ${fileBasenameNoExtension}; ./${fileBasenameNoExtension}",
