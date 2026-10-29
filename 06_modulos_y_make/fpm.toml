@@ -1,11 +1,11 @@
-# Paquete fpm del bloque 03.  Uso:  fpm run   (o  fpm run -- otro.nml)
+# Paquete fpm del bloque 06.  Uso:  fpm run   (o  fpm run -- otro.nml)
 # fpm compila la biblioteca (src/) y el programa principal (app/) y
 # resuelve solo el orden de compilación de los módulos.
-name = "euler_lienard"
+name = "euler_modulos"
 version = "1.0.0"
 license = "MIT"
 author = "Ángel Pita da Veiga Ramonde"
-description = "Curso de Fortran - bloque 03: Euler explicito para la ecuacion de Lienard"
+description = "Curso de Fortran - bloque 06: modulos, namelist y make (Euler para Van der Pol)"
 
 [build]
 auto-executables = false

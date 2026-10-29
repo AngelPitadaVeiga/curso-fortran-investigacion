@@ -1,4 +1,4 @@
-# Dibuja la solución del bloque 03: x(t) y la órbita en el plano (x, y).
+# Dibuja la solución del bloque 06: x(t) y la órbita en el plano (x, y).
 # Uso:  gnuplot graficar.gp
 #       gnuplot -e "archivo='resultados/otro.dat'" graficar.gp
 
@@ -13,7 +13,7 @@ if (strstrt(GPVAL_TERMINALS, "pngcairo") > 0) {
 }
 set output salida
 
-set multiplot layout 1,2 title "Lienard (Van der Pol) - Euler explicito"
+set multiplot layout 1,2 title "Van der Pol - Euler explicito"
 
 set title "x(t)"
 set xlabel "t"
