@@ -1,6 +1,6 @@
-!> Orden de convergencia observado de uno o varios Runge-Kutta.
+!> Programa orden: orden de convergencia observado de uno o varios Runge-Kutta.
 !>
-!> Uso:   convergencia tableros/heun.txt tableros/rk4.txt ...
+!> Uso:   orden tableros/heun.txt tableros/rk4.txt ...
 !>
 !> Van der Pol con mu = 1 desde (2, 0) hasta t = 1, con pasos h = 0.1, 0.05,
 !> ..., 0.1/32. El error en t = 1 se mide frente a una referencia (RK4 con
@@ -30,7 +30,7 @@ program convergencia
     logical :: todo_bien
 
     if (command_argument_count() == 0) then
-        print '(a)', 'Uso: convergencia tablero1.txt [tablero2.txt ...]'
+        print '(a)', 'Uso: orden tablero1.txt [tablero2.txt ...]'
         stop 1
     end if
 

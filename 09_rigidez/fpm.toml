@@ -1,4 +1,4 @@
-# Paquete fpm del bloque 09.  Uso:  fpm run rigidez   o   fpm run convergencia -- tableros/radau_iia3.txt
+# Paquete fpm del bloque 09.  Uso:  fpm run rigidez   o   fpm run orden -- tableros/radau_iia3.txt
 # fpm compila la biblioteca (src/) y el programa principal (app/) y
 # resuelve solo el orden de compilación de los módulos.
 name = "rigidez"
@@ -26,6 +26,6 @@ source-dir = "app"
 main = "principal.f90"
 
 [[executable]]
-name = "convergencia"
+name = "orden"
 source-dir = "app"
 main = "convergencia.f90"

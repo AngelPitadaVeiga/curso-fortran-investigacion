@@ -53,7 +53,7 @@ depurar.
 └── tableros/                euler_implicito, gauss_legendre2, radau_iia3, rk4
 ```
 
-`integrar_rk` mantiene la misma interfaz: el programa de convergencia es
+`integrar_rk` mantiene la misma interfaz: el programa de convergencia (`orden`) es
 **el mismo archivo** que en el bloque 07 y ahora también acepta tableros
 implícitos.
 

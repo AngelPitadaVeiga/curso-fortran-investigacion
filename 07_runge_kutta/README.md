@@ -35,7 +35,7 @@ de compilación): el código general reproduce el caso particular.
 ├── src/tablero_butcher.f90   tipo tablero y su lectura
 ├── src/runge_kutta.f90       paso_rk e integrar_rk
 ├── app/principal.f90         programa rk
-├── app/convergencia.f90      programa convergencia
+├── app/convergencia.f90      programa orden (orden de convergencia)
 ├── tableros/                 euler_explicito, heun, kutta3, rk4
 └── entrada.nml, graficar.gp, graficar_convergencia.gp, Makefile, fpm.toml
 ```

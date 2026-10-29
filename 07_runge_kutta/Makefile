@@ -1,4 +1,6 @@
 # Makefile del bloque 07: igual que el del bloque 06, pero con dos programas.
+# (El programa de convergencia se llama "orden": en Linux, un ejecutable
+# "convergencia" chocaría con el objetivo "make convergencia".)
 #
 #   make               compila en modo release
 #   make debug         compila en modo debug
@@ -10,7 +12,7 @@
 
 FC    = gfortran
 PROG  = rk
-PROG2 = convergencia
+PROG2 = orden
 
 # Módulos, en el orden en que se usan. Los programas están en app/.
 MODULOS = src/modelo.f90 src/tablero_butcher.f90 src/runge_kutta.f90

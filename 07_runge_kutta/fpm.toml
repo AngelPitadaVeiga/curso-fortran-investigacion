@@ -1,4 +1,4 @@
-# Paquete fpm del bloque 07.  Uso:  fpm run rk   o   fpm run convergencia -- tableros/rk4.txt
+# Paquete fpm del bloque 07.  Uso:  fpm run rk   o   fpm run orden -- tableros/rk4.txt
 # fpm compila la biblioteca (src/) y el programa principal (app/) y
 # resuelve solo el orden de compilación de los módulos.
 name = "runge_kutta"
@@ -26,6 +26,6 @@ source-dir = "app"
 main = "principal.f90"
 
 [[executable]]
-name = "convergencia"
+name = "orden"
 source-dir = "app"
 main = "convergencia.f90"

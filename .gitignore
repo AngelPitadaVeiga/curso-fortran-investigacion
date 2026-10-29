@@ -21,14 +21,14 @@
 06_modulos_y_make/error_indice_debug
 07_runge_kutta/rk
 07_runge_kutta/rk_debug
-07_runge_kutta/convergencia
-07_runge_kutta/convergencia_debug
+07_runge_kutta/orden
+07_runge_kutta/orden_debug
 08_retrato_de_fases/retrato
 08_retrato_de_fases/retrato_debug
 09_rigidez/rigidez
 09_rigidez/rigidez_debug
-09_rigidez/convergencia
-09_rigidez/convergencia_debug
+09_rigidez/orden
+09_rigidez/orden_debug
 01_instalacion/comprobacion
 00_propaganda/bin/
 

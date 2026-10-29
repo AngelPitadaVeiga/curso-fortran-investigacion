@@ -75,8 +75,8 @@ done
 sin_cabecera resultados/rk.dat > "$CI/euler07_release.txt"
 ./rk_debug entrada.nml tableros/euler_explicito.txt
 sin_cabecera resultados/rk.dat > "$CI/euler07_debug.txt"
-./convergencia tableros/*.txt
-./convergencia_debug tableros/*.txt
+./orden tableros/*.txt
+./orden_debug tableros/*.txt
 cd "$RAIZ"
 
 titulo "Euler de los bloques 05, 06 y 07: identicos bit a bit"
@@ -107,8 +107,8 @@ make -C 09_rigidez run              # Radau (1,5 millones de pasos) y RK4, que e
 grep -q 'explotado' <(cd 09_rigidez && ./rigidez entrada.nml tableros/rk4.txt resultados/rk4.dat)
 echo "RK4 explota, como debe."
 cd 09_rigidez
-./convergencia tableros/euler_implicito.txt tableros/gauss_legendre2.txt tableros/radau_iia3.txt
-./convergencia_debug tableros/euler_implicito.txt tableros/gauss_legendre2.txt tableros/radau_iia3.txt
+./orden tableros/euler_implicito.txt tableros/gauss_legendre2.txt tableros/radau_iia3.txt
+./orden_debug tableros/euler_implicito.txt tableros/gauss_legendre2.txt tableros/radau_iia3.txt
 # En debug, solo un caso corto con Radau (RK4 se detendría con SIGFPE, a propósito).
 sed -e 's/t_final = 3000.0/t_final = 10.0/' entrada.nml > "$CI/rigidez_corto.nml"
 ./rigidez_debug "$CI/rigidez_corto.nml"
