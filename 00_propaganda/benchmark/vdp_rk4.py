@@ -1,7 +1,7 @@
 """Benchmark: Van der Pol con RK4 de paso fijo desde N condiciones iniciales.
 
 Python puro: el mismo algoritmo, con bucles explícitos, que vdp_rk4.f90,
-.cpp, .jl y .m.
+.cpp, .jl y vdp_rk4_handle.m.
 
 Uso:  python vdp_rk4.py [N] [pasos] [repeticiones]
 """

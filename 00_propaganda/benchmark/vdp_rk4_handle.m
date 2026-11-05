@@ -1,8 +1,8 @@
 function vdp_rk4_handle(n, pasos, repeticiones)
-% VDP_RK4_HANDLE  El mismo RK4 que vdp_rk4.m, escrito en el estilo habitual
+% VDP_RK4_HANDLE  El mismo RK4 que vdp_rk4.f90, escrito en el estilo habitual
 %   de Matlab: el estado es un vector columna y el campo una función anónima
 %   (como se le pasaría a ode45). Mismo algoritmo y mismas operaciones; solo
-%   cambia el estilo. Compárese con vdp_rk4.m y con vdp_rk4_vectorial.f90.
+%   cambia el estilo. Compárese con vdp_rk4_vectorial.f90.
 %
 %   Uso:  matlab -batch "vdp_rk4_handle(1000, 1000, 1)"
 if nargin < 1, n = 1000; end

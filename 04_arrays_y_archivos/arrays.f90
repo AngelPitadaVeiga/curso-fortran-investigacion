@@ -3,7 +3,7 @@
 !>     gfortran arrays.f90 -o arrays
 !>     ./arrays
 program arrays
-    use, intrinsic :: iso_fortran_env, only: real64
+    use iso_fortran_env, only: real64
     implicit none
     real(real64) :: v(5), w(5)              ! tamaño fijo; índices 1..5
     real(real64) :: a(2, 3)                 ! matriz de 2 filas y 3 columnas

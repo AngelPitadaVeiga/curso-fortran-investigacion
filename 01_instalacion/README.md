@@ -1,155 +1,77 @@
-# Bloque 01 · Instalación en Windows
+# Unidad 01 · Instalación
 
-Objetivo: tener **gfortran**, **make** y **gnuplot** en la línea de órdenes,
-y **VS Code** con la extensión *Modern Fortran*. Unos 20 minutos.
+Necesitas tres cosas: el compilador, Python con matplotlib y VS Code. Hazlo antes
+de la primera clase; son unos 20 minutos.
 
-## 1. MSYS2 (entorno UCRT64)
+## 1. El compilador
 
-MSYS2 proporciona gfortran, make y gnuplot compilados para Windows.
+En Windows lo más cómodo es MSYS2:
 
-1. Descarga el instalador desde <https://www.msys2.org> e instálalo en la
-   ruta por defecto, `C:\msys64`.
-2. Abre la terminal **"MSYS2 UCRT64"** (menú Inicio). El prompt muestra
-   `UCRT64` en morado. *UCRT64 es el entorno que recomienda MSYS2.*
-3. Actualiza e instala los paquetes:
+1. Descarga el instalador de <https://www.msys2.org> e instálalo en la ruta que
+   propone, `C:\msys64`.
+2. Abre la terminal **MSYS2 UCRT64** desde el menú Inicio y ejecuta:
 
    ```bash
    pacman -Syu
    ```
 
-   Si te pide cerrar la terminal, ciérrala, vuelve a abrirla y repite
-   `pacman -Syu`. Después:
+   Si te pide cerrar la terminal, ciérrala, ábrela de nuevo y repite la orden.
+
+3. Instala gfortran y make:
 
    ```bash
-   pacman -S mingw-w64-ucrt-x86_64-gcc-fortran mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-gnuplot make diffutils
+   pacman -S mingw-w64-ucrt-x86_64-gcc-fortran mingw-w64-ucrt-x86_64-make
    ```
 
-   | Paquete | Qué instala |
-   |---|---|
-   | `mingw-w64-ucrt-x86_64-gcc-fortran` | `gfortran` (y `gcc`) |
-   | `mingw-w64-ucrt-x86_64-make` | `mingw32-make.exe`, para usar desde PowerShell y VS Code |
-   | `mingw-w64-ucrt-x86_64-gnuplot` | `gnuplot` |
-   | `make` | `make`, para usar dentro de la terminal de MSYS2 |
-   | `diffutils` | `cmp` y `diff`, para comparar salidas (comprobación completa del curso) |
+4. Añade `C:\msys64\ucrt64\bin` al `Path`: tecla Windows, escribe *variables de
+   entorno*, entra en **Editar las variables de entorno de esta cuenta**, selecciona
+   `Path` y añade una entrada nueva con esa ruta.
 
-   Opcional: `mingw-w64-ucrt-x86_64-gcc` ya viene con el anterior y sirve
-   para el C++ del bloque 00 (`g++`).
+En PowerShell, make se llama `mingw32-make`. Es el mismo programa.
 
-## 2. Añadir MSYS2 al PATH de Windows
+**En Linux:** `sudo apt install gfortran make`. **En macOS:** `brew install gcc`.
 
-Para usar `gfortran` desde PowerShell y VS Code:
+## 2. Python y matplotlib
 
-1. Tecla Windows → escribe *"variables de entorno"* →
-   **Editar las variables de entorno de esta cuenta**.
-2. En *Variables de usuario*, selecciona `Path` → **Editar** → **Nuevo**:
-
-   ```
-   C:\msys64\ucrt64\bin
-   ```
-
-3. Acepta y **cierra y vuelve a abrir** PowerShell y VS Code.
-
-Comprueba en PowerShell:
+Instala Python desde <https://www.python.org> y marca la casilla **Add python.exe to
+PATH** en la primera pantalla. Después, en PowerShell:
 
 ```powershell
-gfortran --version
-mingw32-make --version
-gnuplot --version
+pip install numpy matplotlib fortls
 ```
 
-> **`make` o `mingw32-make`.** En `C:\msys64\ucrt64\bin` el programa se llama
-> `mingw32-make`. En la terminal de MSYS2 existe además `make`. Son el mismo
-> GNU Make y los Makefile del curso funcionan con los dos. Si quieres escribir
-> `make` en PowerShell, crea un alias en tu perfil
-> (`notepad $PROFILE` y añade `Set-Alias make mingw32-make`).
+`fortls` es lo que da el autocompletado de Fortran en VS Code.
 
-## 3. VS Code y la extensión Modern Fortran
+## 3. VS Code
 
-1. Instala VS Code: <https://code.visualstudio.com>.
-2. Abre la carpeta del curso (**Archivo → Abrir carpeta**). VS Code ofrecerá
-   instalar las extensiones recomendadas (`.vscode/extensions.json`); acepta.
-   La importante es **Modern Fortran** (`fortran-lang.linter-gfortran`).
-3. **Ctrl+Shift+B** compila y ejecuta el bloque del archivo abierto
-   (tareas definidas en `.vscode/tasks.json`).
+Instala [VS Code](https://code.visualstudio.com) y abre la carpeta del curso con
+**Archivo → Abrir carpeta**. Te propondrá instalar las extensiones recomendadas;
+di que sí. Lo vemos con más calma en la [unidad 02](../02_hola_mundo/).
 
-## 4. fortls y fpm
+## Comprueba que todo funciona
 
-**fortls** es el servidor de lenguaje (autocompletado, ir a la definición,
-documentación al pasar el ratón). Con el Python de Windows
-(<https://www.python.org>):
-
-```powershell
-pip install fortls
-```
-
-Si VS Code no lo encuentra, pon la ruta completa de `fortls.exe` en el
-ajuste `fortran.fortls.path`. Alternativa sin Python de Windows:
-`pacman -S mingw-w64-ucrt-x86_64-python-fortls` en MSYS2.
-
-**fpm** (*Fortran Package Manager*) compila proyectos sin Makefile.
-Descarga el ejecutable de Windows de
-<https://github.com/fortran-lang/fpm/releases>, renómbralo a `fpm.exe` y
-cópialo en una carpeta del PATH (por ejemplo `C:\msys64\ucrt64\bin`).
-Alternativa: `pacman -S mingw-w64-ucrt-x86_64-fpm`.
-
-## 5. Comprobación final
-
-En PowerShell, dentro de esta carpeta:
+Cierra y vuelve a abrir la terminal, entra en esta carpeta y ejecuta:
 
 ```powershell
 gfortran comprobacion.f90 -o comprobacion
 .\comprobacion
 ```
 
-Debe mostrar algo así:
+Tiene que salir algo así:
 
 ```
-Compilador: GCC version 16.2.0          (o la versión que tengas)
+Compilador: GCC version 14.2.0
 matmul funciona:    2.0   3.0   4.0
-gnuplot encontrado.
+Python y matplotlib encontrados.
 Todo listo. Bienvenido a Fortran!
 ```
 
-**Si esto compila y ejecuta, estás listo.** Prueba también un bloque completo:
+## Si algo falla
 
-```powershell
-cd ..\06_modulos_y_make
-mingw32-make run
-```
-
-## Alternativas
-
-**WSL (Ubuntu dentro de Windows).**
-`wsl --install` en PowerShell como administrador; después, en Ubuntu:
-
-```bash
-sudo apt update && sudo apt install gfortran make gnuplot
-```
-
-VS Code se conecta a WSL con la extensión *WSL*.
-
-**Linux (Debian/Ubuntu).** Igual que WSL: `sudo apt install gfortran make gnuplot`.
-En Fedora: `sudo dnf install gcc-gfortran make gnuplot`.
-
-**macOS (Homebrew).** `brew install gcc gnuplot fpm` (gfortran viene con `gcc`).
-
-**Intel `ifx`.** Compilador gratuito de Intel, parte de *oneAPI*:
-<https://www.intel.com/content/www/us/en/developer/tools/oneapi/fortran-compiler.html>.
-En Windows necesita además las *Build Tools* de Visual Studio. Las opciones
-son distintas a las de gfortran (`-O3 -xHost`, `-check all -traceback`), así
-que los Makefile del curso no sirven tal cual con `ifx`; con fpm basta
-`fpm run --compiler ifx`.
-
-## Problemas frecuentes
-
-| Síntoma | Causa y solución |
+| Qué pasa | Qué hacer |
 |---|---|
-| `"gfortran" no se reconoce como un comando...` | Falta `C:\msys64\ucrt64\bin` en el PATH, o no has reabierto la terminal o VS Code tras añadirlo. |
-| `make: command not found` en PowerShell | Usa `mingw32-make` (o crea el alias de la sección 2). |
-| `make` funciona pero se comporta raro | Puede haber otro `make` antes en el PATH (Git, Strawberry Perl, Chocolatey...). Comprueba con `where.exe make`. |
-| El antivirus borra o bloquea el `.exe` recién compilado | Falso positivo frecuente con ejecutables nuevos sin firmar. Añade una exclusión para la carpeta del curso. |
-| Caracteres raros (`Ã³`) en la consola | La consola de Windows no usa UTF-8 por defecto. Los programas del curso imprimen sin tildes para evitarlo. Opcional: `chcp 65001`. |
-| PowerShell no ejecuta `hola` | En PowerShell hay que escribir `.\hola` (con `.\`). |
-| `pacman` se queda bloqueado o da errores de claves | Cierra todas las terminales de MSYS2 y repite `pacman -Syu`. |
-| `fortls` no arranca en VS Code | Ruta completa en `fortran.fortls.path`, o desactívalo con `fortran.fortls.disabled`. |
-| `error: ... cannot open output file ...exe: Permission denied` | El programa sigue en ejecución (o lo tiene abierto el antivirus). Ciérralo y recompila. |
+| `gfortran` no se reconoce | Revisa el `Path` y cierra y abre de nuevo la terminal o VS Code. |
+| `make` no se reconoce en PowerShell | Escribe `mingw32-make`. |
+| PowerShell no ejecuta `hola` | Hay que escribir `.\hola`. |
+| El antivirus borra el `.exe` | Añade una exclusión para la carpeta del curso. |
+| `Permission denied` al compilar | El programa sigue abierto. Ciérralo y vuelve a compilar. |

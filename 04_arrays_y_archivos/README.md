@@ -1,72 +1,76 @@
-# Bloque 04 · Arrays y archivos
+# Unidad 04 · Arrays y archivos
 
-Los arrays son la razón de ser de Fortran: operaciones sobre arrays
-completos sin bucles, cortes como en Matlab o Julia y matrices guardadas
-por columnas. Después, escribir datos en un archivo y dibujarlos con
-gnuplot, que es lo que haremos con todas las simulaciones del curso.
+Aquí es donde Fortran empieza a brillar. Si vienes de Matlab o de Julia, casi todo
+te resultará familiar.
 
 ```bash
-gfortran -Wall arrays.f90 -o arrays
+gfortran arrays.f90 -o arrays
 ./arrays
-gfortran -Wall tabla.f90 -o tabla
+gfortran matrices.f90 -o matrices
+./matrices
+gfortran tabla.f90 -o tabla
 ./tabla
-gnuplot graficar.gp
 ```
 
-## `arrays.f90`
+## `arrays.f90`: operar sin bucles
 
 ```fortran
-real(real64) :: v(5), w(5)              ! tamaño fijo; índices 1..5
-real(real64) :: a(2, 3)                 ! 2 filas, 3 columnas
-real(real64), allocatable :: x(:)       ! tamaño decidido al ejecutar
+real(real64) :: v(5), w(5)
+real(real64) :: a(2, 3)
 
 v = [1.0_real64, 2.0_real64, 3.0_real64, 4.0_real64, 5.0_real64]
-w = 2 * v + 1                           ! sin bucle
+w = 2 * v + 1
 ```
 
-Salida (resumida):
-
-```
-v        =   1.0   2.0   3.0   4.0   5.0
-2*v + 1  =   3.0   5.0   7.0   9.0  11.0
-v * w    =   3.0  10.0  21.0  36.0  55.0
-...
-v(5:1:-1) =   5.0   4.0   3.0   2.0   1.0
-
-a =
-   1.0   3.0   5.0
-   2.0   4.0   6.0
-a(:, 2) (columna 2) =   3.0   4.0
-matmul(a, [1, 1, 1]) =   9.0  12.0
-
-x(0:n) =  0.00  0.25  0.50  0.75  1.00
-lbound(x) = 0   ubound(x) = 4
-```
-
-| Idea | Fortran | Julia | Matlab |
+| Quiero... | Fortran | Julia | Matlab |
 |---|---|---|---|
-| Elemento | `v(2)` | `v[2]` | `v(2)` |
-| Corte | `v(2:4)`, `v(1:5:2)` | `v[2:4]`, `v[1:2:5]` | `v(2:4)`, `v(1:2:5)` |
-| Columna | `a(:, 2)` | `a[:, 2]` | `a(:, 2)` |
-| Elemento a elemento | `v * w` | `v .* w` | `v .* w` |
-| Producto matricial | `matmul(a, b)` | `a * b` | `a * b` |
+| Un corte | `v(2:4)` | `v[2:4]` | `v(2:4)` |
+| Un corte con paso | `v(1:5:2)` | `v[1:2:5]` | `v(1:2:5)` |
+| Una columna | `a(:, 2)` | `a[:, 2]` | `a(:, 2)` |
+| Multiplicar elemento a elemento | `v * w` | `v .* w` | `v .* w` |
+| Producto de matrices | `matmul(a, b)` | `a * b` | `a * b` |
 | Producto escalar | `dot_product(v, w)` | `dot(v, w)` | `dot(v, w)` |
-| Tamaño | `size(v)`, `shape(a)` | `length(v)`, `size(a)` | `numel(v)`, `size(a)` |
-| Rango | `[(i, i = 1, n)]` | `1:n` | `1:n` |
 
-- **Primer índice**: 1 por defecto, pero se elige: `x(0:n)` tiene `n + 1`
-  elementos, de `x(0)` a `x(n)`. Muy cómodo para escribir `u(0), ..., u(n)`
-  como en las fórmulas.
-- **Por columnas**: `a(1,1), a(2,1), a(1,2), ...` están seguidos en
-  memoria (como en Julia y Matlab, al revés que en C/C++). `a(:, j)`, una
-  columna, es contigua; `a(i, :)`, una fila, no. Por eso, en el curso, cada
-  estado de una trayectoria se guarda como **columna**: `u(:, k)`.
-- **`allocatable`**: `allocate(x(0:n))` reserva memoria y se libera sola
-  cuando la variable deja de existir. Además, asignar un array entero a uno
-  `allocatable` lo (re)dimensiona automáticamente.
-- Casi todas las funciones intrínsecas (`sqrt`, `sin`, `abs`...) actúan
-  elemento a elemento sobre arrays. Reducciones: `sum`, `product`,
-  `maxval`, `minval`, `maxloc`, `norm2`, `any`, `all`, `count`.
+Dos detalles:
+
+- Los índices empiezan en 1, pero puedes elegir otra cosa: `x(0:n)` va de `x(0)` a
+  `x(n)`. Es muy cómodo para escribir `u_0, ..., u_n` como en las fórmulas.
+- Las matrices se guardan **por columnas**, como en Julia y Matlab. Por eso en el
+  curso cada estado de una trayectoria ocupa una columna.
+
+## `matrices.f90`: matrices dinámicas
+
+Casi nunca se sabe el tamaño de los datos al escribir el programa, así que esta es
+la forma normal de trabajar en numérica:
+
+```fortran
+real(real64), allocatable :: a(:, :)    ! dos dimensiones, tamaño por decidir
+
+read *, n
+allocate(a(n, n))                       ! ahora sí se reserva la memoria
+```
+
+Lo que debes saber:
+
+- **Se liberan solas.** Cuando la variable deja de existir, su memoria se libera. No
+  hay `free` ni `delete`, y tampoco fugas de memoria.
+- **Se reservan solas al asignar.** Si `b` es `allocatable`, `b = matmul(a, a)` le da
+  el tamaño justo sin necesidad de `allocate`.
+- **Se pueden redimensionar**, con `deallocate(a)` y otro `allocate`.
+- **`allocated(a)`** dice si ya tiene memoria, y **`allocate(a(n, n), stat=estado)`**
+  deja comprobar si la reserva ha fallado en lugar de detener el programa.
+- **`size(a, 1)`** y **`shape(a)`** dan sus dimensiones.
+
+El caso que más vamos a usar es guardar una trayectoria, con un estado en cada
+columna:
+
+```fortran
+allocate(u(2, 0:n_pasos))       ! u(:, k) es el estado en el paso k
+```
+
+También se puede hacer crecer un vector con `v = [v, x]`. Es cómodo, pero copia el
+vector entero cada vez, así que evítalo en bucles largos: si sabes el tamaño,
+resérvalo desde el principio.
 
 ## `tabla.f90`: escribir un archivo
 
@@ -79,27 +83,18 @@ end do
 close(unidad)
 ```
 
-- `open` asocia un archivo a una **unidad** (un número); `newunit=` deja que
-  Fortran elija uno libre. `status="replace"` lo crea o lo sobrescribe.
-- `write(unidad, formato)` es como `print` pero hacia el archivo.
-  `3es20.10`: tres reales en notación científica, 20 columnas y 10 decimales.
-- La primera línea empieza por `#`: gnuplot (y `readdlm` de Julia, `load`
-  de Matlab con `CommentStyle`, `numpy.loadtxt`) la ignoran.
+`newunit=` le pide a Fortran un número de unidad libre, `status="replace"` crea o
+sobrescribe el archivo y `write` funciona como `print`, pero hacia el archivo. La
+primera línea empieza por `#` para que Python, Julia o Matlab sepan que es un
+comentario.
 
-`graficar.gp` lee las columnas y dibuja:
-
-```gnuplot
-plot 'tabla.dat' using 1:2 with lines title "sin(x)", \
-     'tabla.dat' using 1:3 with lines title "cos(x)"
-```
-
-![tabla.png](figuras/tabla.png)
+Así trabajaremos todo el curso: Fortran calcula y escribe columnas, y otro programa
+las dibuja. Eso es justo lo que veremos en la siguiente unidad.
 
 ## Ejercicios
 
-1. En `arrays.f90`, calcula la norma de `v` de tres formas:
-   `sqrt(sum(v**2))`, `sqrt(dot_product(v, v))` y `norm2(v)`.
-2. Añade a `tabla.f90` una cuarta columna con `sin(x)**2 + cos(x)**2 - 1`
-   y dibújala. ¿De qué orden es? (Compáralo con `epsilon(1.0_real64)`.)
-3. Haz que `n` se pida al usuario: declara `integer :: n`, quita el
-   `parameter`, lee con `read *, n` y usa `allocatable` para `x`.
+1. Calcula la norma de `v` de tres formas: `sqrt(sum(v**2))`,
+   `sqrt(dot_product(v, v))` y `norm2(v)`.
+2. En `matrices.f90`, construye la matriz de Hilbert, `a(i, j) = 1/(i + j - 1)`, e
+   imprime la suma de sus elementos.
+3. Haz que `tabla.f90` pida `n` por teclado, con `x` como array `allocatable`.

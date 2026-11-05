@@ -1,10 +1,9 @@
-!> Escribe una tabla  x  sin(x)  cos(x)  en tabla.dat, lista para gnuplot.
+!> Escribe una tabla  x  sin(x)  cos(x)  en tabla.dat. La dibujaremos en la unidad 05.
 !>
 !>     gfortran tabla.f90 -o tabla
 !>     ./tabla
-!>     gnuplot graficar.gp          (genera tabla.png)
 program tabla
-    use, intrinsic :: iso_fortran_env, only: real64
+    use iso_fortran_env, only: real64
     implicit none
     integer, parameter :: n = 200
     real(real64), parameter :: pi = acos(-1.0_real64)

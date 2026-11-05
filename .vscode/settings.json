@@ -7,7 +7,7 @@
 
     // Linter: compila en segundo plano con gfortran y marca errores y avisos.
     "fortran.linter.compiler": "gfortran",
-    "fortran.linter.extraArgs": ["-Wall", "-Wextra", "-std=f2018", "-fimplicit-none"],
+    "fortran.linter.extraArgs": ["-std=f2018", "-fimplicit-none"],
     // Los .mod que genera el linter van a una carpeta aparte (ignorada por git).
     "fortran.linter.modOutput": "${workspaceFolder}/.vscode/mod",
     "fortran.linter.includePaths": [
@@ -22,8 +22,7 @@
     "files.associations": {
         "*.f": "FortranFixedForm",
         "*.for": "FortranFixedForm",
-        "*.f90": "FortranFreeForm",
-        "*.gp": "gnuplot"
+        "*.f90": "FortranFreeForm"
     },
 
     "[FortranFreeForm]": {

@@ -1,10 +1,9 @@
 # Benchmark: Van der Pol con RK4 de paso fijo desde N condiciones iniciales.
-# El mismo algoritmo, con bucles explícitos, que vdp_rk4.f90, .cpp, .py y .m.
+# El mismo algoritmo, con bucles explícitos, que vdp_rk4.f90, .cpp, .py y vdp_rk4_handle.m.
 #
 # Uso:  julia vdp_rk4.jl [N] [pasos] [repeticiones]
 #
-# Se mide por separado la PRIMERA llamada (incluye la compilación JIT) y el
-# mejor tiempo de las siguientes. No hace falta BenchmarkTools.
+# Se mide el mejor tiempo de varias repeticiones. No hace falta BenchmarkTools.
 
 """Integra las N trayectorias y devuelve sum(x + y) del estado final."""
 function integrar(n::Int, pasos::Int)
@@ -40,12 +39,7 @@ function main()
     pasos = length(ARGS) >= 2 ? parse(Int, ARGS[2]) : 1000
     repeticiones = length(ARGS) >= 3 ? parse(Int, ARGS[3]) : 3
 
-    # Primera llamada: compilación JIT + ejecución.
-    t0 = time_ns()
-    suma = integrar(n, pasos)
-    primera = (time_ns() - t0) / 1e9
-
-    # Llamadas siguientes: ya compilada.
+    suma = 0.0
     mejor = Inf
     for r in 1:repeticiones
         t0 = time_ns()
@@ -53,8 +47,7 @@ function main()
         mejor = min(mejor, (time_ns() - t0) / 1e9)
     end
 
-    println("Julia: primera llamada (con JIT) = ", round(primera, digits = 4), " s")
-    println("RESULTADO Julia N=$n pasos=$pasos tiempo_s=$mejor suma=$suma primera_s=$primera")
+    println("RESULTADO Julia N=$n pasos=$pasos tiempo_s=$mejor suma=$suma")
 end
 
 main()

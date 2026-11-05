@@ -1,60 +1,64 @@
-# Bloque 03 · Variables, tipos y bucles
+# Unidad 03 · Variables, tipos y bucles
 
-Lo mínimo para escribir cálculos: declarar variables, elegir la precisión,
-tomar decisiones con `if` y repetir con `do`. Dos programas de un solo
-archivo; se compilan a mano, como el hola mundo.
+Lo mínimo para empezar a calcular: declarar variables, elegir la precisión, tomar
+decisiones y repetir cosas. Son dos programas de un solo archivo.
 
 ```bash
-gfortran -Wall tipos.f90 -o tipos
+gfortran tipos.f90 -o tipos
 ./tipos
-gfortran -Wall heron.f90 -o heron
+gfortran heron.f90 -o heron
 ./heron
 ```
 
-(En VS Code: abre el archivo y pulsa **Ctrl+Shift+B**.)
+## Una línea que verás mucho
 
-## `tipos.f90`: tipos básicos y dos trampas
-
-| Tipo | Ejemplo | Equivale en Julia / C++ |
-|---|---|---|
-| `integer` | `n = 7` | `Int32` / `int` |
-| `real(real64)` | `b = 0.1_real64` | `Float64` / `double` |
-| `real(real32)` (o `real` a secas) | `a = 0.1` | `Float32` / `float` |
-| `logical` | `.true.`, `.false.` | `Bool` / `bool` |
-| `character(len=20)` | `"Van der Pol"` | `String` / `std::string` (pero de longitud fija) |
-
-`real64` viene del módulo intrínseco `iso_fortran_env`:
+Casi todos los programas del curso empiezan así:
 
 ```fortran
-use, intrinsic :: iso_fortran_env, only: real64
+use iso_fortran_env, only: real64
 ```
 
-Las **declaraciones van todas al principio**, antes de la primera
-instrucción. Con `implicit none`, usar una variable no declarada es un error
-de compilación.
+Merece la pena pararse en ella, porque es la única que vas a copiar sin parar:
 
-**Trampa 1, la división entera.** `7/2` vale `3`. gfortran lo avisa con
-`-Wall` (verás el aviso al compilar `tipos.f90`: es intencionado). Basta con
-que uno de los dos operandos sea real: `7/2.0_real64` vale `3.5`.
+- **`use`** importa algo de un módulo. Es como `using` en Julia o `#include` en C++.
+- **`iso_fortran_env`** es un módulo que trae de serie todo compilador de Fortran.
+  No hay que instalar nada.
+- **`only: real64`** dice que solo queremos ese nombre. Así, leyendo el principio
+  del archivo, sabes de dónde viene cada cosa.
+- **`real64`** es un número que identifica al tipo real de 64 bits, y por eso se
+  escribe `real(real64)`. Sin esta línea, el compilador no sabe qué es `real64`.
 
-**Trampa 2, constantes sin sufijo.** `b = 0.1` guarda en `b` (doble) la
-constante `0.1` de **simple** precisión: `0.10000000149011612`. Hay que
-escribir `0.1_real64`. Es el error más común al portar código de Matlab o
-Julia, donde `0.1` ya es doble.
+Es necesaria porque `real` a secas tiene solo 32 bits, unas 7 cifras, que no bastan
+para hacer numérica. En códigos de otras personas la verás como
+`use, intrinsic :: iso_fortran_env`, que significa lo mismo.
 
-La salida (`print *`, formato libre):
+## `tipos.f90`
+
+| Tipo | Ejemplo | En Julia | En C++ |
+|---|---|---|---|
+| `integer` | `n = 7` | `Int32` | `int` |
+| `real(real64)` | `b = 0.1_real64` | `Float64` | `double` |
+| `logical` | `.true.` | `Bool` | `bool` |
+| `character(len=20)` | `"Van der Pol"` | `String` | `std::string` |
+
+Las declaraciones van todas al principio, antes de la primera instrucción.
+
+Hay dos trampas en las que caerás, y que el programa enseña:
+
+**La división entera.** `7/2` vale `3`. Basta con que uno de los dos sea real:
+`7/2.0_real64` vale `3.5`.
+
+**Las constantes sin sufijo.** `b = 0.1` no guarda 0,1 en doble precisión: la constante
+`0.1` es de simple precisión y se convierte después. Hay que escribir `0.1_real64`.
 
 ```
  b = 0.1         ->  0.10000000149011612
  b = 0.1_real64  ->  0.10000000000000001
-
- epsilon(real32) =   1.19209290E-07
- epsilon(real64) =   2.2204460492503131E-016
 ```
 
-## `heron.f90`: un bucle con criterio de parada
+## `heron.f90`
 
-Raíz cuadrada de 2 con el método de Herón (Newton para `x² − 2 = 0`):
+Calcula la raíz cuadrada de 2 con el método de Herón, que es Newton para `x² − 2 = 0`:
 
 ```fortran
 do k = 1, max_iter
@@ -76,59 +80,22 @@ end do
 Convergencia en 6 iteraciones.
 ```
 
-Convergencia cuadrática: el error pasa de `1e-3` a `1e-6` y a `1e-12`.
+Mira la columna del error: el número de cifras correctas se duplica en cada paso.
 
-Lo que aparece:
+Algunas cosas que conviene recordar:
 
-- **`parameter`**: constante con nombre; el compilador impide modificarla.
-- **`do k = 1, n ... end do`**: el contador avanza de 1 en 1 (incluye `n`).
-  `do k = n, 1, -1` cuenta hacia atrás. `exit` sale del bucle y `cycle`
-  salta a la siguiente iteración. `do ... end do` sin contador repite
-  hasta un `exit`.
-- **`if (...) then ... else if (...) then ... else ... end if`**; en una
-  sola línea, sin `then`: `if (cond) exit`.
-- Comparaciones: `==`, `/=` (distinto, no `!=`), `<`, `<=`, `>`, `>=`.
-  Lógicos: `.and.`, `.or.`, `.not.`.
-- **Formatos**: `i5` (entero en 5 columnas), `i0` (el ancho justo),
-  `f22.16` (22 columnas, 16 decimales), `es10.2` (científica), `a` (texto).
-  `print '(a, i0)', 'k = ', k` frente a `print *, 'k = ', k`.
-- Potencia: `x**2` (no `x^2`). Funciones intrínsecas: `sqrt`, `abs`, `exp`,
-  `log`, `sin`, `mod`, `max`, `min`...
+- `do k = 1, n` incluye `n`. `exit` sale del bucle y `cycle` salta a la siguiente vuelta.
+- "Distinto de" se escribe `/=`, porque `!` empieza un comentario.
+- La potencia es `x**2`, no `x^2`.
+- `parameter` declara una constante que el compilador no deja modificar.
+- En los formatos, `i5` es un entero en 5 columnas, `f22.16` un real con 16 decimales,
+  `es10.2` notación científica y `a` texto.
 
 ## Ejercicios
 
-1. En `heron.f90`, cambia `real64` por `real32` en todo el programa
-   (también en los sufijos). ¿Cuántas cifras correctas obtienes? ¿Qué pasa
-   con `tol = 1.0e-15`? (Pista: compáralo con `epsilon`.)
-2. Modifica el método para calcular la raíz cúbica: Newton para
-   `x³ − a = 0` da `x_{k+1} = (2 x_k + a / x_k²) / 3`.
-3. Escribe `basilea.f90` que calcule `1 + 1/2² + 1/3² + ... + 1/n²` con
-   `n = 1000000` y lo compare con el límite `π²/6`. Cuidado con `1/i**2`
-   (división entera) y con `i**2` cuando `i` es grande (no cabe en un
-   entero de 32 bits). Pista: `pi = acos(-1.0_real64)`.
-
-<details>
-<summary>Solución del ejercicio 3</summary>
-
-```fortran
-program basilea
-    use, intrinsic :: iso_fortran_env, only: real64
-    implicit none
-    integer, parameter :: n = 1000000
-    real(real64) :: suma, pi
-    integer :: i
-
-    pi = acos(-1.0_real64)
-    suma = 0.0_real64
-    do i = 1, n
-        suma = suma + 1.0_real64 / real(i, real64)**2
-    end do
-    print '(a, f20.16)', 'Suma parcial: ', suma
-    print '(a, f20.16)', 'pi**2/6     : ', pi**2 / 6
-    print '(a, es10.2)', 'Diferencia  : ', pi**2 / 6 - suma    ! ~ 1/n
-end program basilea
-```
-
-`real(i, real64)` convierte el entero a doble antes de elevarlo al
-cuadrado: `1000000**2` desbordaría un entero de 32 bits.
-</details>
+1. Cambia `real64` por `real32` en todo `heron.f90`, sufijos incluidos. ¿Cuántas
+   cifras correctas obtienes? ¿Qué pasa con la tolerancia de `1.0e-15`?
+2. Calcula la raíz cúbica: Newton para `x³ − a = 0` da `x_{k+1} = (2 x_k + a / x_k²) / 3`.
+3. Calcula `1 + 1/2² + 1/3² + ... + 1/n²` con `n = 1000000` y compárala con `π²/6`.
+   Hay dos trampas: `1/i**2` es una división entera, e `i**2` no cabe en un entero de
+   32 bits si `i` es grande. Pista: `pi = acos(-1.0_real64)`.

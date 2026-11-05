@@ -1,12 +1,12 @@
 !> Benchmark: Van der Pol con RK4 de paso fijo desde N condiciones iniciales.
-!> El mismo algoritmo, con bucles explícitos, que vdp_rk4.cpp, .jl, .py y .m.
+!> El mismo algoritmo, con bucles explícitos, que vdp_rk4.cpp, .jl, .py y vdp_rk4_handle.m.
 !>
 !> Uso:  vdp_rk4_f [N] [pasos] [repeticiones]
 !> Imprime el mejor tiempo de las repeticiones y una suma de control del
 !> estado final (para comprobar que todas las versiones calculan lo mismo y
 !> para que el compilador no pueda eliminar el cálculo).
 program vdp_rk4
-    use, intrinsic :: iso_fortran_env, only: real64, int64
+    use iso_fortran_env, only: real64, int64
     implicit none
     integer :: n, pasos, repeticiones, r
     real(real64), parameter :: mu = 1.0_real64, h = 0.01_real64

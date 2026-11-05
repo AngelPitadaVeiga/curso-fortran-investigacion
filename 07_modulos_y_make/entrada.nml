@@ -1,0 +1,11 @@
+! Parámetros de la unidad 07. Formato namelist: empieza con &nombre y termina con /.
+! Los comentarios empiezan con '!'. Lo que no aparezca conserva el valor
+! por defecto que tiene en el programa. El orden no importa.
+&parametros
+    mu      = 1.0        ! parámetro de Van der Pol
+    h       = 0.01       ! tamaño de paso
+    t_final = 30.0
+    x0      = 0.5        ! condición inicial
+    y0      = 0.0
+    archivo_salida = 'resultados/euler.dat'
+/

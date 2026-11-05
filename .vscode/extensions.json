@@ -1,13 +1,15 @@
 {
     // VS Code ofrece instalar estas extensiones al abrir la carpeta del curso.
     "recommendations": [
-        // Modern Fortran: resaltado, linter con gfortran, fortls y depuración.
+        // Modern Fortran: resaltado, errores al escribir, fortls y depuración.
         "fortran-lang.linter-gfortran",
-        // C/C++: depurador gdb (lo usa Modern Fortran para depurar) y el C++ del bloque 00.
+        // C/C++: el depurador que usa Modern Fortran y el C++ de la unidad 00.
         "ms-vscode.cpptools",
-        // Resaltado de sintaxis para los scripts de gnuplot (.gp).
-        "mammothb.gnuplot",
-        // Opcional: Julia (benchmark del bloque 00).
-        "julialang.language-julia"
+        // Python: para los scripts de las figuras.
+        "ms-python.python",
+        // Muestra los errores en la misma línea donde ocurren.
+        "usernamehw.errorlens",
+        // Colorea las columnas de los archivos de datos.
+        "mechatroner.rainbow-csv"
     ]
 }

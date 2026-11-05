@@ -3,25 +3,27 @@
 !>     gfortran tipos.f90 -o tipos
 !>     ./tipos
 program tipos
-    use, intrinsic :: iso_fortran_env, only: real32, real64
+    use iso_fortran_env, only: real32, real64
     implicit none
 
     ! Declaraciones: siempre al principio, antes de cualquier instrucción.
     integer :: n
     real(real32) :: a              ! real de 32 bits (simple precisión)
-    real(real64) :: b              ! real de 64 bits (doble precisión), el habitual
+    real(real64) :: b,c            ! real de 64 bits (doble precisión), el habitual
     logical :: es_par
     character(len=20) :: nombre
 
     n = 7
     a = 0.1
     b = 0.1_real64                 ! el sufijo _real64 hace la constante doble
+    c = 0.5_real64                 ! el sufijo _real64 hace la constante doble
     es_par = (mod(n, 2) == 0)
     nombre = "Van der Pol"
 
     print *, "n      =", n
     print *, "a      =", a
     print *, "b      =", b
+    print *, "c      =", c
     print *, "es_par =", es_par
     print *, "nombre = ", trim(nombre)      ! trim quita los espacios del final
 

@@ -3,7 +3,7 @@
 !>     gfortran comprobacion.f90 -o comprobacion
 !>     ./comprobacion
 program comprobacion
-    use, intrinsic :: iso_fortran_env, only: real64, compiler_version
+    use iso_fortran_env, only: real64, compiler_version
     implicit none
     real(real64) :: a(3, 3), x(3)
     integer :: estado, estado_cmd
@@ -14,12 +14,12 @@ program comprobacion
     print '(a)', 'Compilador: ' // compiler_version()
     print '(a, 3f6.1)', 'matmul funciona: ', x            ! 2 3 4
 
-    ! ¿Hay gnuplot en el PATH? (no es imprescindible, pero se usa en el curso)
-    call execute_command_line('gnuplot --version', exitstat=estado, cmdstat=estado_cmd)
+    ! ¿Hay Python con matplotlib? (no es imprescindible, pero las figuras se hacen con él)
+    call execute_command_line('python -c "import matplotlib"', exitstat=estado, cmdstat=estado_cmd)
     if (estado_cmd == 0 .and. estado == 0) then
-        print '(a)', 'gnuplot encontrado.'
+        print '(a)', 'Python y matplotlib encontrados.'
     else
-        print '(a)', 'Aviso: no encuentro gnuplot (las figuras no se generaran).'
+        print '(a)', 'Aviso: no encuentro matplotlib (las figuras no se generaran).'
     end if
 
     print '(a)', 'Todo listo. Bienvenido a Fortran!'

@@ -1,0 +1,13 @@
+! Parámetros de la unidad 09 (retrato de fases).
+&parametros
+    mu = 1.0
+    tablero_archivo = '../08_runge_kutta/tableros/rk4.txt'
+    h = 0.001
+    t_transitorio = 100.0    ! se integra y se descarta, para llegar al ciclo
+    t_ciclo       = 20.0     ! tramo del ciclo límite que se dibuja (> un periodo)
+    t_trayectoria = 10.0     ! duración de cada trayectoria de la rejilla
+    margen        = 1.6      ! la caja es la del ciclo ampliada en este factor
+    n_flechas     = 51       ! rejilla de flechas: n_flechas x n_flechas
+    n_condiciones = 15       ! rejilla de condiciones iniciales: 15 x 15
+    paso_escritura = 10      ! se escribe un punto de cada 10
+/

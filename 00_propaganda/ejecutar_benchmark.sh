@@ -8,14 +8,13 @@
 # se saltan con un aviso. Escribe:
 #     resultados/salida.txt   salida bruta de cada programa
 #     resultados/tiempos.dat  tiempos por paso y relativos a Fortran
-#     resultados/benchmark.png gráfica de barras (si hay gnuplot)
+#     resultados/benchmark.png gráfica de barras (si hay matplotlib)
 #
 # Tamaños (se pueden cambiar con variables de entorno):
 #     PASOS=1000         pasos de RK4 por trayectoria (h = 0.01, t_final = 10)
 #     N_RAPIDO=100000    trayectorias para Fortran, C++, Julia y NumPy
 #     N_LENTO=1000       trayectorias para Python puro (100 veces menos)
-#     N_MATLAB=20000     trayectorias para Matlab (bucles escalares, vdp_rk4.m)
-#     N_MATLAB_FA=1000   trayectorias para Matlab con función anónima (vdp_rk4_handle.m)
+#     N_MATLAB=1000      trayectorias para Matlab (vdp_rk4_handle.m)
 #     SIN_MATLAB=1       no ejecutar Matlab (arrancarlo tarda unos segundos)
 # Los tiempos se comparan POR PASO Y TRAYECTORIA, así que distintos N son comparables.
 
@@ -25,8 +24,7 @@ cd "$(dirname "$0")"
 PASOS=${PASOS:-1000}
 N_RAPIDO=${N_RAPIDO:-100000}
 N_LENTO=${N_LENTO:-1000}
-N_MATLAB=${N_MATLAB:-20000}
-N_MATLAB_FA=${N_MATLAB_FA:-1000}
+N_MATLAB=${N_MATLAB:-1000}
 REPETICIONES=3
 
 mkdir -p resultados bin
@@ -114,8 +112,7 @@ echo "== Matlab"
 if [ -n "${SIN_MATLAB:-}" ]; then
     aviso "SIN_MATLAB definido; se salta Matlab."
 elif command -v matlab >/dev/null 2>&1; then
-    # Una sola sesión de Matlab para las dos versiones (arrancar tarda unos segundos).
-    (cd benchmark && matlab -batch "vdp_rk4($N_MATLAB, $PASOS, $REPETICIONES); vdp_rk4_handle($N_MATLAB_FA, $PASOS, 1)") 2>&1 \
+    (cd benchmark && matlab -batch "disp(['Matlab ' version]); vdp_rk4_handle($N_MATLAB, $PASOS, 1)") 2>&1 \
         | tr -d '\r' | grep -E '^(RESULTADO|Matlab)' | tee -a "$SALIDA"
     grep -m1 '^Matlab ' "$SALIDA" >> "$ENTORNO"
 else
@@ -143,18 +140,12 @@ tr -d '\r' < "$SALIDA" | grep '^RESULTADO' | awk '
         nn[NR] = n
         if ($2 == "Fortran") ref = ns[NR]
         if ($2 == "Fortran") sref = suma[NR]
-        if ("primera_s" in v) {          # Julia: primera llamada, con JIT
-            extra = NR
-            ns_jit = v["primera_s"] / (n * p) * 1e9
-        }
         delete v
     }
     END {
         if (ref == "") ref = ns[1]
         for (k = 1; k <= NR; k++) {
             printf "\"%s\"%*s %12.3f %16.2f %26.15e %8d\n", nombre[k], 26 - length(nombre[k]), "", ns[k], ns[k] / ref, suma[k], nn[k]
-            if (k == extra)
-                printf "\"Julia (1a llamada, JIT)\"    %12.3f %16.2f %26.15e %8d\n", ns_jit, ns_jit / ref, suma[k], nn[k]
         }
         # Comprobación de la suma de control frente a Fortran
         for (k = 1; k <= NR; k++) {
@@ -168,8 +159,8 @@ echo
 echo "== Resumen ($TIEMPOS)"
 cat "$TIEMPOS"
 
-if command -v gnuplot >/dev/null 2>&1; then
-    gnuplot graficar_benchmark.gp && echo "Figura: resultados/benchmark.png"
+if [ -n "$PYTHON" ] && $PYTHON -c "import matplotlib" >/dev/null 2>&1; then
+    $PYTHON graficar_benchmark.py
 else
-    aviso "gnuplot no encontrado; no se genera la grafica."
+    aviso "matplotlib no encontrado; no se genera la grafica."
 fi

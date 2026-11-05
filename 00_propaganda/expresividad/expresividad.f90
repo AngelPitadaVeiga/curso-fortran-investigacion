@@ -3,7 +3,7 @@
 !>
 !>   gfortran -O3 expresividad.f90 -o expresividad_f
 program expresividad
-    use, intrinsic :: iso_fortran_env, only: real64
+    use iso_fortran_env, only: real64
     implicit none
     integer, parameter :: n = 5
     real(real64) :: a(n), b(n), c(n), u(n), lap(n), x(n), y(n), mat(n, n)

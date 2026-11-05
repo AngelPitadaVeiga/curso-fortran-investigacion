@@ -8,7 +8,7 @@
 !>     gfortran heron.f90 -o heron
 !>     ./heron
 program heron
-    use, intrinsic :: iso_fortran_env, only: real64
+    use iso_fortran_env, only: real64
     implicit none
 
     ! parameter: constantes con nombre (no se pueden modificar).
@@ -25,7 +25,7 @@ program heron
         x_nuevo = 0.5_real64 * (x + a / x)
         ! i5: entero en 5 columnas; f22.16: real con 16 decimales; es10.2: notación científica
         print '(i5, f22.16, es10.2)', k, x_nuevo, abs(x_nuevo - sqrt(a))
-        if (abs(x_nuevo - x) <= tol * x_nuevo) exit    ! sale del bucle
+        if (abs(x_nuevo - x) <= tol * x_nuevo) exit    ! sale del bucle (cuando 'estaciona' para una cierta tolerancia)
         x = x_nuevo
     end do
 

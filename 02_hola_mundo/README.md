@@ -1,4 +1,6 @@
-# Bloque 02 · Hola, mundo
+# Unidad 02 · Hola, mundo
+
+Este es el programa más corto que vamos a escribir:
 
 ```fortran
 program hola
@@ -7,65 +9,67 @@ program hola
 end program hola
 ```
 
-## Compilar a mano
-
-En PowerShell (o en la terminal de MSYS2), dentro de esta carpeta:
+Para compilarlo y ejecutarlo, abre una terminal en esta carpeta:
 
 ```powershell
 gfortran hola.f90 -o hola
 .\hola
 ```
 
-En Linux, macOS o MSYS2: `./hola`. Sale `Hola, mundo` (con un espacio
-delante: ahora vemos por qué).
+En Linux, macOS o la terminal de MSYS2 se ejecuta con `./hola`.
 
-`gfortran` compila **antes** de ejecutar (*ahead of time*): genera
-`hola.exe`, un ejecutable que no necesita ni el compilador ni el código
-fuente para funcionar.
+Fíjate en que son dos pasos, como en C++ y a diferencia de Julia o Matlab. Primero
+`gfortran` genera el ejecutable, y a partir de ahí ya no hace falta ni el compilador
+ni el código fuente.
 
-## Desde VS Code
+## Línea a línea
 
-Abre `hola.f90` y pulsa **Ctrl+Shift+B**: en las carpetas sin `Makefile`
-(bloques 01 a 05) compila y ejecuta el archivo abierto; en las que tienen
-`Makefile` (06 en adelante), hace `make run`.
+- **`program` y `end program`** marcan el programa principal.
+- **`implicit none`** obliga a declarar todas las variables. Ponla siempre; el
+  ejercicio de abajo explica por qué.
+- **`print *`** escribe en pantalla, y el asterisco deja el formato en manos del
+  compilador. Por eso aparece un espacio delante del texto.
 
-## Qué significa cada línea
+A Fortran le dan igual las mayúsculas: `PRINT` y `print` son lo mismo. Aquí lo
+escribiremos todo en minúsculas.
 
-- **`program hola` ... `end program hola`**: el programa principal. Solo
-  hay uno por ejecutable. Repetir el nombre tras `end program` es opcional,
-  pero es buena costumbre.
-- **`implicit none`**: obliga a declarar todas las variables. Sin ella,
-  Fortran (por herencia de FORTRAN 77) da tipo automáticamente: las
-  variables que empiezan por `i, j, k, l, m, n` son enteras y el resto
-  reales. Una errata como `veloicdad = 1` crearía en silencio una variable
-  nueva. **Ponla siempre** (en el ejercicio se ve por qué).
-- **`print *, ...`**: escribe en pantalla con formato libre (`*`). El
-  compilador decide el formato; por eso aparece un espacio inicial. Con
-  formato explícito: `print '(a)', "Hola, mundo"`.
-- Fortran **no distingue mayúsculas de minúsculas**: `PRINT`, `Print` y
-  `print` son lo mismo. En este curso, todo en minúsculas.
+## Moverse por VS Code
 
-## Comparación en una línea
+**Extensiones.** Con la carpeta del curso abierta, VS Code te propone las que hacen
+falta. Si no lo hace, búscalas con `Ctrl+Mayús+X`:
 
-| Lenguaje | Hola, mundo |
+| Extensión | Para qué sirve |
 |---|---|
-| Fortran | `program hola; print *, "Hola, mundo"; end program` |
-| C++ | `#include <iostream>` + `int main() { std::cout << "Hola, mundo\n"; }` |
-| Julia | `println("Hola, mundo")` |
-| Matlab | `disp('Hola, mundo')` |
+| Modern Fortran | Colores, errores mientras escribes, autocompletado y depuración |
+| C/C++ | Aporta el depurador que usa Modern Fortran |
+| Python | Para los scripts de las figuras |
+| Error Lens | Muestra los errores en la misma línea donde ocurren |
+| Rainbow CSV | Colorea las columnas de los archivos de datos |
 
-Fortran y C++ se compilan antes de ejecutar; Julia compila "justo a
-tiempo" (JIT) la primera vez que llama a cada función; Matlab interpreta
-(con su propio JIT).
+**Atajos que usarás a todas horas:**
+
+| Atajo | Qué hace |
+|---|---|
+| `Ctrl+Ñ` | Abre y cierra la terminal |
+| `Ctrl+S` | Guarda (compilar sin guardar es el error clásico) |
+| `Ctrl+P` | Abre un archivo escribiendo parte de su nombre |
+| `Ctrl+Mayús+P` | Busca cualquier orden de VS Code |
+| `Ctrl+B` | Muestra u oculta la barra lateral |
+| `Ctrl+Mayús+F` | Busca en todos los archivos |
+| `Ctrl+Ç` | Comenta o descomenta las líneas seleccionadas |
+| `Alt+↑` y `Alt+↓` | Mueve la línea actual |
+| `Ctrl+D` | Selecciona la siguiente aparición de la palabra |
+| `F12` | Va a la definición de una función |
+| `Ctrl++` y `Ctrl+-` | Aumenta y reduce el tamaño de todo |
+
+En la terminal, `↑` recupera la última orden y `Tab` completa los nombres de archivo.
+`Ctrl+Ñ` y `Ctrl+Ç` son para teclado español; con otro teclado, los encontrarás con
+`Ctrl+Mayús+P`.
 
 ## Ejercicio
 
-1. Añade, antes de `print`, la línea `x = 2.5` y después `print *, x`.
-   Compila: da un error, porque `x` no está declarada
-   (`Symbol 'x' at (1) has no IMPLICIT type`).
-2. Quita `implicit none` y vuelve a compilar: ahora funciona, porque `x` es
-   real "por la inicial". Cambia `x` por `n` en las dos líneas: imprime
-   `2`, porque `n` es entera y `2.5` se trunca sin avisar. Por eso
-   `implicit none` siempre.
-3. Vuelve a dejar el programa como estaba. En el bloque 03 se declaran
-   las variables como es debido.
+1. Añade `x = 2.5` y `print *, x` antes del `end program`. Compila. ¿Qué error da?
+2. Quita `implicit none` y compila de nuevo. Ahora funciona: las variables que
+   empiezan por `i, j, k, l, m, n` son enteras y las demás, reales.
+3. Cambia `x` por `n`. ¿Qué imprime? Imagina ahora una errata en el nombre de una
+   variable en un programa de mil líneas.

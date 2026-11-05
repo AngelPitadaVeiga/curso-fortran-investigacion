@@ -1,5 +1,5 @@
 // Benchmark: Van der Pol con RK4 de paso fijo desde N condiciones iniciales.
-// El mismo algoritmo, con bucles explícitos, que vdp_rk4.f90, .jl, .py y .m.
+// El mismo algoritmo, con bucles explícitos, que vdp_rk4.f90, .jl, .py y vdp_rk4_handle.m.
 //
 // Compilar:  g++ -O3 -march=native -std=c++17 vdp_rk4.cpp -o vdp_rk4_cpp
 // Uso:       vdp_rk4_cpp [N] [pasos] [repeticiones]

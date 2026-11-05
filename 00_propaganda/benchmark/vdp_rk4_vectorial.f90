@@ -7,7 +7,7 @@
 !>
 !> Uso:  vdp_rk4_vectorial_f [N] [pasos] [repeticiones]
 program vdp_rk4_vectorial
-    use, intrinsic :: iso_fortran_env, only: real64, int64
+    use iso_fortran_env, only: real64, int64
     implicit none
     integer :: n, pasos, repeticiones, r
     real(real64), parameter :: mu = 1.0_real64, h = 0.01_real64
