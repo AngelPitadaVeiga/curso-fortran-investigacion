@@ -4,12 +4,13 @@
 
 Son dos sesiones de dos horas pensadas para gente que ya programa en Julia, C++ o
 Matlab y nunca ha escrito una línea de Fortran. Empezamos con un hola mundo y
-terminamos resolviendo una ecuación en derivadas parciales con elementos finitos, y
-por el camino pasamos por Euler, Runge–Kutta y los problemas rígidos.
+terminamos calculando la deformación y las vibraciones de una viga con elementos
+finitos en 2D. Por el camino pasamos por Euler, Runge–Kutta y los problemas rígidos.
 
-Todo el curso gira alrededor de un mismo problema, el oscilador de Van der Pol, que
-vamos resolviendo cada vez un poco mejor. Si en algún momento te pierdes, la unidad
-anterior funciona y es más sencilla, así que siempre se puede volver atrás.
+Casi todo el curso gira alrededor de un mismo problema, el oscilador de Van der Pol, que
+vamos resolviendo cada vez un poco mejor, y solo en la última unidad cambiamos de
+problema. Si en algún momento te pierdes, la unidad anterior funciona y es más sencilla,
+así que siempre se puede volver atrás.
 
 ![Benchmark](00_propaganda/figuras/benchmark_i7-14700.png)
 
@@ -45,7 +46,7 @@ Aquí el código se reparte en varios archivos y se compila con `make`.
 | [08 · Módulos y make](08_modulos_y_make/) | Separar el código en archivos y compilarlo con un Makefile |
 | [09 · Runge–Kutta](09_runge_kutta/) | Más métodos, su orden de convergencia y qué pasa con la rigidez |
 | [10 · Retrato de fases](10_retrato_de_fases/) | Usar el integrador para estudiar la dinámica |
-| [11 · Elementos finitos](11_elementos_finitos/) | Un código más grande que junta todo lo anterior |
+| [11 · Elementos finitos](11_elementos_finitos/) | Una viga en 2D: un código más grande que junta todo lo anterior |
 
 ## Cómo se trabaja
 

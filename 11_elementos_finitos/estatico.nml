@@ -1,0 +1,12 @@
+! Viga en voladizo de 10 x 1, empotrada a la izquierda y con una fuerza hacia abajo
+! en el extremo derecho. Sin t_final: solo se calcula la deformación.
+&parametros
+    lx = 10.0
+    ly = 1.0
+    nx = 80
+    ny = 8
+    e_young = 1.0
+    nu = 0.3
+    rho = 1.0
+    carga = 1.0e-4
+/

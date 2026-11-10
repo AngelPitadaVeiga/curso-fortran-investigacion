@@ -1,34 +1,31 @@
-# Dibuja una solución de fem: la curva en varios instantes, y el mapa de x y t.
+# Dibuja la viga deformada, coloreada por la tensión de von Mises.
+# Antes hay que ejecutar  make run.
 #
-#     python graficar.py resultados/calor.dat
-#     python graficar.py resultados/fisher.dat
-import sys
+#     python graficar.py
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.tri as mtri
 
-archivo = sys.argv[1] if len(sys.argv) > 1 else "resultados/calor.dat"
+x, y, ux, uy = np.loadtxt("resultados/nodos.dat", unpack=True)
+tri = np.loadtxt("resultados/triangulos.dat", dtype=int) - 1     # en Fortran empiezan en 1
+vm = np.loadtxt("resultados/tension.dat")
 
-# La primera línea es un comentario con los tiempos de las columnas 2, 3, ...
-tiempos = np.array(open(archivo).readline().split(":")[1].split(), dtype=float)
-x, *columnas = np.loadtxt(archivo, unpack=True)
-u = np.array(columnas)          # u[i] es la solución en tiempos[i]
+escala = 5      # la deformacion se exagera para que se vea
 
-fig, (izquierda, derecha) = plt.subplots(1, 2, figsize=(12, 5))
+fig, (arriba, abajo) = plt.subplots(2, 1, figsize=(12, 5), sharex=True)
 
-colores = plt.cm.viridis(np.linspace(0, 1, len(tiempos)))
-for t, ui, color in zip(tiempos, u, colores):
-    izquierda.plot(x, ui, color=color, label=f"t = {t:.3g}")
-izquierda.set_xlabel("x")
-izquierda.set_ylabel("u")
-izquierda.legend(fontsize=8, ncol=2)
+arriba.triplot(mtri.Triangulation(x, y, tri), color="#a3a29c", lw=0.4)
+arriba.set_title("Malla sin deformar")
+arriba.set_aspect("equal")
 
-mapa = derecha.pcolormesh(x, tiempos, u, shading="nearest", cmap="viridis")
-derecha.set_xlabel("x")
-derecha.set_ylabel("t")
-fig.colorbar(mapa, ax=derecha, label="u")
+malla = mtri.Triangulation(x + escala * ux, y + escala * uy, tri)
+mapa = abajo.tripcolor(malla, facecolors=vm, cmap="viridis")
+abajo.triplot(malla, color="white", lw=0.2)
+abajo.set_title(f"Deformada (x{escala}), coloreada por la tension de von Mises")
+abajo.set_aspect("equal")
+fig.colorbar(mapa, ax=abajo, orientation="horizontal", pad=0.15, aspect=40, label="von Mises")
 
 fig.tight_layout()
-salida = archivo.removesuffix(".dat") + ".png"
-fig.savefig(salida, dpi=150)
-print("Figura escrita en " + salida)
+fig.savefig("resultados/deformada.png", dpi=150)
+print("Figura escrita en resultados/deformada.png")
 plt.show()

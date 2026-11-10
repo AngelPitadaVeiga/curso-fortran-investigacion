@@ -1,0 +1,15 @@
+! El método explícito con un paso por encima del máximo estable (0.083): explota.
+&parametros
+    lx = 10.0
+    ly = 1.0
+    nx = 80
+    ny = 8
+    e_young = 1.0
+    nu = 0.3
+    rho = 1.0
+    carga = 1.0e-4
+    metodo = 'explicito'
+    dt = 0.1
+    t_final = 200.0
+    paso_escritura = 20
+/

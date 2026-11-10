@@ -1,9 +1,10 @@
-# Makefile de la unidad 11: dos programas (fem y orden_espacial) que comparten módulos.
+# Makefile de la unidad 11: dos programas (solido y orden_espacial) que comparten módulos.
 #
 #     make                 compila los dos programas
-#     make run             ecuación del calor con Euler implícito
-#     make run-explicito   la misma, con Euler explícito: explota
-#     make run-fisher      un frente de Fisher-KPP
+#     make run             la viga bajo su carga (estática)
+#     make run-vibracion   la viga soltada desde esa deformación, con el método implícito
+#     make run-explicito   lo mismo con el método explícito (con un paso estable)
+#     make run-inestable   y con un paso demasiado grande: explota
 #     make run-orden       orden de convergencia en el espacio
 #     make clean
 
@@ -14,35 +15,38 @@ ifeq ($(OS),Windows_NT)
     EXE = .exe
 endif
 
-all: fem$(EXE) orden_espacial$(EXE)
+all: solido$(EXE) orden_espacial$(EXE)
 
-fem$(EXE): malla.o tridiagonal.o ensamblaje.o evolucion.o fem.o
-	$(FC) $(FFLAGS) malla.o tridiagonal.o ensamblaje.o evolucion.o fem.o -o fem
+solido$(EXE): malla.o elasticidad.o algebra.o dinamica.o solido.o
+	$(FC) $(FFLAGS) malla.o elasticidad.o algebra.o dinamica.o solido.o -o solido
 
-orden_espacial$(EXE): malla.o tridiagonal.o ensamblaje.o orden_espacial.o
-	$(FC) $(FFLAGS) malla.o tridiagonal.o ensamblaje.o orden_espacial.o -o orden_espacial
+orden_espacial$(EXE): malla.o elasticidad.o algebra.o orden_espacial.o
+	$(FC) $(FFLAGS) malla.o elasticidad.o algebra.o orden_espacial.o -o orden_espacial
 
 %.o: %.f90
 	$(FC) $(FFLAGS) -c $<
 
-evolucion.o: tridiagonal.o
-fem.o: malla.o ensamblaje.o evolucion.o
-orden_espacial.o: malla.o ensamblaje.o tridiagonal.o
+dinamica.o: algebra.o
+solido.o: malla.o elasticidad.o algebra.o dinamica.o
+orden_espacial.o: malla.o elasticidad.o algebra.o
 
 resultados:
 	mkdir -p resultados
 
-run: fem$(EXE) | resultados
-	./fem calor.nml
+run: solido$(EXE) | resultados
+	./solido estatico.nml
 
-run-explicito: fem$(EXE) | resultados
-	./fem calor_explicito.nml
+run-vibracion: solido$(EXE) | resultados
+	./solido vibracion.nml
 
-run-fisher: fem$(EXE) | resultados
-	./fem fisher.nml
+run-explicito: solido$(EXE) | resultados
+	./solido vibracion_explicito.nml
+
+run-inestable: solido$(EXE) | resultados
+	./solido vibracion_inestable.nml
 
 run-orden: orden_espacial$(EXE)
 	./orden_espacial
 
 clean:
-	rm -rf *.o *.mod fem orden_espacial fem.exe orden_espacial.exe resultados
+	rm -rf *.o *.mod solido orden_espacial solido.exe orden_espacial.exe resultados

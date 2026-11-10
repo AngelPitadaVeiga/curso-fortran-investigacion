@@ -1,0 +1,17 @@
+! Lo mismo con el método explícito, con un paso por debajo del máximo estable
+! (2 / omega_max = 0.083). Hace falta un paso treinta veces más pequeño que el
+! implícito, así que solo se simula hasta t = 200.
+&parametros
+    lx = 10.0
+    ly = 1.0
+    nx = 80
+    ny = 8
+    e_young = 1.0
+    nu = 0.3
+    rho = 1.0
+    carga = 1.0e-4
+    metodo = 'explicito'
+    dt = 0.07
+    t_final = 200.0
+    paso_escritura = 20
+/

@@ -1,161 +1,180 @@
 # Unidad 11 · Elementos finitos
 
-Para terminar, un código más grande que junta casi todo lo que hemos visto: módulos, un
-Makefile, archivos de entrada, subrutinas con `intent`, arrays dinámicos, cortes de arrays,
-Euler explícito e implícito, orden de convergencia y figuras con Python.
+Para terminar, un código más grande que junta casi todo lo que hemos visto: módulos, Makefile,
+archivos de entrada, subrutinas con `intent`, arrays dinámicos, Euler y su estabilidad, orden de
+convergencia y figuras con Python.
 
-El problema es una ecuación en derivadas parciales, la de reacción–difusión:
-
-```
-u_t = d u_xx + r u (1 - u),     x en [0, 1],     u_x = 0 en los extremos
-```
-
-Si `r = 0`, es la ecuación del calor. Si `r > 0`, es la de Fisher–KPP, que tiene frentes que
-avanzan. Y la vamos a resolver con **elementos finitos lineales en una dimensión**.
+El problema es una **viga en voladizo**: un rectángulo de 10 × 1, empotrado en su lado izquierdo y con
+una fuerza hacia abajo en el derecho. Lo resolvemos con elementos finitos en 2D, con las ecuaciones de la
+elasticidad lineal. Es bastante más que el calor: la incógnita es un vector (el desplazamiento de cada
+punto), hay una malla de triángulos, y además de calcular cómo se deforma la viga, vamos a soltarla y ver
+cómo vibra.
 
 ```bash
-make run              # ecuación del calor con Euler implícito
-python graficar.py resultados/calor.dat
+make run
+python graficar.py
 ```
+
+```
+Malla: 729 nodos, 1280 triangulos, 1458 incognitas
+Flecha en el extremo:                 -3.815E-01
+Teoria de vigas (Euler-Bernoulli):    -4.000E-01
+Cociente:                              0.954
+```
+
+![Viga deformada](figuras/deformada.png)
+
+La viga se dobla, y la tensión de von Mises (el color) es máxima arriba y abajo, junto al empotramiento,
+y casi nula en la línea central. Es lo que dice la teoría de vigas.
 
 ## La idea, muy rápido
 
-En lugar de aproximar en cada punto, aproximamos la solución como una combinación de funciones
-"sombrero" `φ_i`, una por nodo (vale 1 en su nodo, 0 en los demás, y es lineal en medio). Al
-sustituir en la forma débil de la ecuación sale un sistema de ecuaciones diferenciales
-ordinarias:
+Dividimos la viga en triángulos. En cada nodo hay dos incógnitas, el desplazamiento horizontal y el
+vertical, y dentro de cada triángulo el desplazamiento se interpola linealmente entre sus tres vértices.
+Con eso, la deformación dentro de un triángulo es constante y sale de un producto `B u_e`, la tensión es
+`D B u_e`, y la energía elástica del triángulo da su matriz de rigidez:
 
 ```
-M u' = - d K u + M g(u)         M(i, j) = ∫ φ_i φ_j        K(i, j) = ∫ φ_i' φ_j'
+K_e = área · Bᵀ D B
 ```
 
-con `M` la matriz de masa y `K` la de rigidez. Y eso ya sabemos resolverlo, con Euler. Las
-condiciones de contorno de flujo nulo son las naturales en elementos finitos, así que no hay que
-hacer nada para imponerlas.
+(`B` contiene las derivadas de las funciones de forma, y `D` el material: módulo de Young y coeficiente de
+Poisson). La matriz de rigidez global, `K`, es la suma de todas las `K_e`, cada una colocada en las
+filas y columnas de sus tres nodos. Eso es el **ensamblaje**. Y con la fuerza `f`, la estática es
 
-Como cada `φ_i` solo toca a sus vecinos, las dos matrices son **tridiagonales**. Se
-construyen elemento a elemento: cada trozo `[x(e), x(e+1)]` aporta una matriz pequeña de 2x2.
+```
+K u = f
+```
 
 ## Los archivos
 
 ```
 11_elementos_finitos/
-├── malla.f90          crea los nodos
-├── ensamblaje.f90     construye M y K
-├── tridiagonal.f90    producto matriz-vector y resolución
-├── evolucion.f90      un paso de tiempo, explícito o implícito
-├── fem.f90            el programa: lee, avanza en el tiempo y escribe
-├── orden_espacial.f90 el programa que mide el orden en el espacio
-├── calor.nml, calor_explicito.nml, fisher.nml
+├── malla.f90           crea los nodos y los triángulos
+├── elasticidad.f90     las matrices B y D, y el ensamblaje de K y de la masa
+├── algebra.f90         resolutor de sistemas lineales (Cholesky)
+├── dinamica.f90        los dos métodos de integración en el tiempo
+├── solido.f90          el programa: lee, resuelve y escribe
+├── orden_espacial.f90  el programa que mide el orden de convergencia
+├── *.nml               los parámetros de cada caso
 ├── Makefile
-└── graficar.py
+└── graficar.py, graficar_vibracion.py
 ```
 
-Quién usa a quién: `fem` usa `malla`, `ensamblaje` y `evolucion`; `evolucion` usa
-`tridiagonal`; y `orden_espacial` usa `malla`, `ensamblaje` y `tridiagonal`.
+`solido` usa `malla`, `elasticidad`, `algebra` y `dinamica`; `dinamica` usa `algebra`; y `orden_espacial`
+usa `malla`, `elasticidad` y `algebra`. Léelos en ese orden: `malla.f90` es corto, `elasticidad.f90` es el
+corazón del método, y `solido.f90` se parece mucho a los programas principales de las unidades anteriores.
 
-Léelos en este orden: `malla.f90` (veinte líneas), `ensamblaje.f90`, `tridiagonal.f90`,
-`evolucion.f90` y por último `fem.f90`, que se parece mucho a los programas principales
-anteriores.
+Algunas cosas de Fortran que aparecen aquí:
 
-Dos detalles. Las matrices tridiagonales simétricas se guardan en dos vectores, `dia` y
-`fuera`, y el producto con un vector queda en tres líneas gracias a los cortes de arrays:
+- **Arrays de dos dimensiones para los nodos y los triángulos.** `x(:, i)` son las coordenadas del nodo
+  `i`, y `tri(:, e)`, los tres nodos del triángulo `e`. Cada columna es un objeto, como en la unidad 04.
+- **Índices con vectores.** Para ensamblar, `k(gl, gl) = k(gl, gl) + ke` suma una matriz de 6x6 en las
+  seis filas y columnas que indica el vector `gl`. Es como indexar con un vector en Matlab o Julia.
+- **`pack`**, para quedarnos con las incógnitas libres. La viga está empotrada a la izquierda, así que los
+  desplazamientos de esos nodos son cero y no son incógnitas. `libres = pack([(i, i = 1, 2*n)], .not. fijo)`
+  da la lista de los demás, y la submatriz del sistema es `k(libres, libres)`.
+- **El resolutor.** La matriz de rigidez es simétrica y definida positiva, así que usamos la factorización
+  de Cholesky, `K = L Lᵀ`, y después resolvemos dos sistemas triangulares. No es lo más rápido (la matriz es
+  casi toda ceros) pero cabe en veinte líneas. En un código real se usaría una matriz dispersa, o LAPACK
+  (`dpotrf` y `dpotrs` hacen esto mismo).
 
-```fortran
-w = dia * v
-w(1:n-1) = w(1:n-1) + fuera * v(2:n)
-w(2:n) = w(2:n) + fuera * v(1:n-1)
-```
+## ¿Está bien?
 
-Y resolver el sistema es la eliminación gaussiana de siempre, pero aprovechando que casi todo son
-ceros: cuesta `O(n)` en vez de `O(n³)`.
+Hay dos formas de comprobarlo. La primera es comparar con la teoría de vigas, y es lo que imprime el
+programa: la flecha del extremo debería ser `P L³ / (3 E I)`. Pero fíjate: con `ny = 4` casillas en el
+canto, el cociente sale 0,83. Los triángulos lineales son demasiado rígidos a flexión, y hay que refinar:
 
-## El tiempo: Euler otra vez
+| casillas (nx × ny) | flecha / teoría |
+|---|---:|
+| 20 × 2 | 0,54 |
+| 40 × 4 | 0,83 |
+| 80 × 8 | 0,95 |
+| 120 × 12 | 0,98 |
 
-Un paso explícito es `M u_nuevo = M (u + dt g(u)) - dt d K u`. Hay que resolver un sistema con `M`,
-pero es muy sencillo. Uno implícito con la difusión en el lado derecho es
-`(M + dt d K) u_nuevo = M (u + dt g(u))`, y la matriz `M + dt d K` es siempre la misma, así que
-se construye una vez antes del bucle.
-
-## Ecuación del calor, con solución exacta
-
-`calor.nml` parte de `u(x, 0) = cos(π x)`, y la solución exacta es
-`exp(-d π² t) cos(π x)`. El programa la compara con la que ha calculado:
-
-```
-Elementos: 50   metodo: implicito   dt = 1.00E-02   pasos: 100
-Error maximo en los nodos en t_final:   1.69E-03
-```
-
-![Calor](figuras/calor.png)
-
-A la izquierda, la solución en varios instantes. A la derecha, el mismo resultado como un mapa
-de `x` y `t`.
-
-## Y la rigidez vuelve
-
-Ahora `make run-explicito`: la misma ecuación, la misma malla, con Euler explícito y un paso
-de `dt = 0.001`. Es un paso muy pequeño, ¿no? Fíjate en lo que sale:
-
-![Calor con Euler explícito](figuras/calor_explicito.png)
-
-Hasta `t = 0.05` todo parece ir bien, y de repente aparece un zigzag que crece sin parar. Si
-alargas `t_final` hasta 1, el programa te avisa de que la solución explota.
-
-Es la misma historia de la unidad 09. Al discretizar en espacio con `h_x = 0.02` aparecen
-autovalores enormes (del orden de `12 d / h_x²`), y Euler explícito necesita
-`dt < h_x² / (6 d)`, es decir, unos 0,0007. El implícito no tiene esa restricción, y con
-`dt = 0.01` va perfectamente. Cuantos más elementos pongas, más estricto es el límite: aquí
-la rigidez no viene de la ecuación, sino de la malla.
-
-## Fisher–KPP
-
-`make run-fisher` resuelve la ecuación con reacción, `r = 1`, desde un escalón en el extremo
-izquierdo. Con la difusión implícita y la reacción explícita, avanza con paso 0,05:
-
-```bash
-make run-fisher
-python graficar.py resultados/fisher.dat
-```
-
-![Fisher](figuras/fisher.png)
-
-El frente avanza hacia la derecha a una velocidad que tiende a `2 √(r d)`, unos 0,063 con estos
-valores.
-
-## ¿Es el orden correcto?
-
-Como en la unidad 09, comprobamos el orden de convergencia, esta vez en el espacio:
+La otra es medir el orden de convergencia, como en la unidad 09. Para eso hace falta una solución exacta,
+que no tenemos para la viga. La solución es inventarse una: elegimos un desplazamiento
+`ux = sin(πx) sin(πy)`, `uy = 0` en el cuadrado unidad (que vale cero en todo el borde), lo sustituimos en
+las ecuaciones y calculamos qué fuerza lo produciría. Si resolvemos con esa fuerza, la solución exacta es
+la que elegimos, y podemos medir el error.
 
 ```bash
 make run-orden
 ```
 
 ```
-Estiramiento de la malla:  1.0
-  elementos     error maximo     orden
-         10       7.4366E-03
-         20       1.8650E-03      2.00
-         40       4.6663E-04      2.00
-         80       1.1668E-04      2.00
-        160       2.9171E-05      2.00
-        320       7.2929E-06      2.00
+  casillas     error maximo     orden
+         4       7.4906E-02
+         8       1.9270E-02      1.96
+        16       4.8970E-03      1.98
+        32       1.2307E-03      1.99
+OK: orden 2.
 ```
 
-Con elementos lineales, el error se divide por 4 cada vez que duplicas los elementos: orden 2.
-El programa lo repite con una malla no uniforme (`estiramiento = 1.5`), con elementos más
-pequeños cerca de `x = 0`, y sigue dando orden 2. Esa flexibilidad es una de las ventajas de
-los elementos finitos: el código de `ensamblaje.f90` ya funciona para cualquier malla, porque
-cada elemento usa su propia longitud.
+Con triángulos lineales, el error se divide por cuatro al duplicar las casillas: orden 2.
+
+## Soltar la viga
+
+Ahora la parte dinámica. Partimos de la deformación estática, soltamos la viga, y sin rozamiento oscilará
+para siempre. La ecuación es `M u'' + K u = 0`, donde `M` es la matriz de masa (aquí, un vector: cada
+triángulo reparte un tercio de su masa en cada nodo). Un sistema de ecuaciones diferenciales ordinarias,
+y eso ya lo sabemos resolver. Con dos métodos, que son los de siempre:
+
+- **Explícito** (velocidad Verlet). Es barato, un producto de matriz por vector por paso, pero solo es
+  estable si `dt < 2 / ω_max`, donde `ω_max` es la mayor frecuencia de la malla.
+- **Implícito** (Newmark, aceleración media). En cada paso resuelve un sistema, pero es estable con
+  cualquier `dt`. Es la regla del trapecio de la unidad 09, aplicada al sistema de primer orden
+  `u' = v`, `M v' = -K u`. La matriz del sistema es siempre la misma, así que se factoriza una vez
+  antes del bucle.
+
+El programa calcula `ω_max` con el método de la potencia (multiplica un vector por `M⁻¹K` una y otra vez,
+hasta que se alinea con el autovector dominante) y te dice cuál es el paso máximo del explícito.
+
+```bash
+make run-vibracion
+python graficar_vibracion.py
+```
+
+![Vibración](figuras/vibracion.png)
+
+A la izquierda, la flecha del extremo y la frecuencia que daría la teoría de vigas. El periodo de la
+simulación es 610, frente a 619 de la teoría (con la malla de 40 × 4 saldría 565: de nuevo la rigidez de
+los triángulos lineales). La curva no es una sinusoide perfecta porque soltamos la viga desde su
+deformación estática, que no es exactamente el primer modo y excita también otros. A la derecha, la
+energía, que se conserva: es lo que se espera de este método.
+
+Con `dt = 2` el implícito da dos periodos en 650 pasos. Ahora el explícito:
+
+```bash
+make run-explicito
+```
+
+Con `dt = 0.07`, justo por debajo del máximo (0,083), funciona y da el mismo resultado que el implícito
+hasta nueve cifras. Pero necesita treinta veces más pasos, y por eso solo simulamos hasta `t = 200`.
+Y si pasas del máximo:
+
+```bash
+make run-inestable
+```
+
+```
+Paso maximo del metodo explicito:        2 / omega_max =  8.273E-02
+Metodo: explicito   dt = 1.000E-01
+La solucion ha explotado en t =  2.400E+00
+```
+
+Con `dt = 0.1`, solo un veinte por ciento por encima del límite, la solución explota en 24 pasos. Es la
+rigidez de la unidad 09 con otro disfraz: las frecuencias altas de la malla, que no nos interesan, son las
+que mandan sobre el paso. Y cuanto más fina es la malla, más altas son y más pequeño tiene que ser el paso.
 
 ## Ejercicios
 
-1. Prueba `estiramiento = 2` en `calor.nml`. ¿Cambia el error?
-2. Con `calor_explicito.nml`, busca por tanteo el `dt` más grande que no explota. ¿Coincide con
-   `h_x² / (6 d)`? Hazlo también con 100 elementos.
-3. En `fisher.nml`, mide la velocidad del frente y compárala con `2 √(r d)`. Hará falta una malla
-   más larga o un `t_final` mayor.
-4. Cambia la condición inicial a un escalón en el centro del intervalo. ¿Qué pasa con los dos
-   frentes?
-5. Para atreverse: cambia las condiciones de contorno a `u = 0` en los extremos. Tendrás que
-   modificar las matrices en la primera y la última fila.
+1. Con `estatico.nml`, prueba mallas de 20 × 2, 40 × 4, 80 × 8 y 120 × 12, y comprueba la tabla de arriba.
+   ¿Cuánto tarda cada una?
+2. Ponle a la viga el doble de espesor (`ly = 2`). ¿Cuánto cambia la flecha? ¿Y si es el doble de larga?
+   Compara con lo que dice la teoría, que es proporcional a `L³ / ly³`.
+3. En `vibracion_explicito.nml` busca por tanteo el `dt` más grande que no explota. ¿Coincide con el que
+   calcula el programa? Haz lo mismo con una malla de 40 × 4.
+4. Cambia `nu` a `0.49` (casi incompresible). ¿Qué pasa con la flecha? ¿Y con la frecuencia máxima?
+5. Para atreverse: cambia las condiciones de contorno para empotrar también el lado derecho, y dibuja la
+   deformación con una fuerza hacia abajo repartida en todo el cuerpo (`m * g` en cada nodo).
