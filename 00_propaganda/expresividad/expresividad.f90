@@ -3,34 +3,33 @@
 !>
 !>   gfortran -O3 expresividad.f90 -o expresividad_f
 program expresividad
-    use iso_fortran_env, only: real64
     implicit none
     integer, parameter :: n = 5
-    real(real64) :: a(n), b(n), c(n), u(n), lap(n), x(n), y(n), mat(n, n)
+    double precision :: a(n), b(n), c(n), u(n), lap(n), x(n), y(n), mat(n, n)
     integer :: i, j
 
-    a = [(real(i, real64) - 3.0_real64, i = 1, n)]        ! -2 -1 0 1 2
-    b = 1.0_real64
+    a = [(dble(i) - 3.0d0, i = 1, n)]        ! -2 -1 0 1 2
+    b = 1.0d0
     u = a**2
-    x = 1.0_real64
-    mat = reshape([((real(i + j, real64), i = 1, n), j = 1, n)], [n, n])
+    x = 1.0d0
+    mat = reshape([((dble(i + j), i = 1, n), j = 1, n)], [n, n])
 
     ! 1. Combinación lineal de vectores
-    c = a + 2.0_real64 * b
+    c = a + 2.0d0 * b
 
     ! 2. Norma euclídea
     print '(a, f10.4)', 'norma(a)        = ', norm2(a)
 
     ! 3. Operación condicional elemento a elemento
-    where (a > 0.0_real64)
+    where (a > 0.0d0)
         b = sqrt(a)
     elsewhere
-        b = 0.0_real64
+        b = 0.0d0
     end where
 
     ! 4. Diferencias finitas (laplaciano 1D) en los nodos interiores
-    lap = 0.0_real64
-    lap(2:n-1) = u(1:n-2) - 2.0_real64 * u(2:n-1) + u(3:n)
+    lap = 0.0d0
+    lap(2:n-1) = u(1:n-2) - 2.0d0 * u(2:n-1) + u(3:n)
 
     ! 5. Producto matriz-vector y sumas por columnas
     y = matmul(mat, x)

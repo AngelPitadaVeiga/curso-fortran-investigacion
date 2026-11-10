@@ -6,11 +6,11 @@
 !> estado final (para comprobar que todas las versiones calculan lo mismo y
 !> para que el compilador no pueda eliminar el cálculo).
 program vdp_rk4
-    use iso_fortran_env, only: real64, int64
+    use iso_fortran_env, only: int64
     implicit none
     integer :: n, pasos, repeticiones, r
-    real(real64), parameter :: mu = 1.0_real64, h = 0.01_real64
-    real(real64) :: suma, tiempo, mejor
+    double precision, parameter :: mu = 1.0d0, h = 0.01d0
+    double precision :: suma, tiempo, mejor
     integer(int64) :: t0, t1, ticks
     character(len=32) :: texto_tiempo, texto_suma
 
@@ -18,12 +18,12 @@ program vdp_rk4
     pasos = argumento(2, 1000)
     repeticiones = argumento(3, 3)
 
-    mejor = huge(1.0_real64)
+    mejor = huge(1.0d0)
     do r = 1, repeticiones
         call system_clock(t0, ticks)
         suma = integrar(n, pasos)
         call system_clock(t1)
-        tiempo = real(t1 - t0, real64) / ticks
+        tiempo = dble(t1 - t0) / ticks
         mejor = min(mejor, tiempo)
     end do
 
@@ -38,29 +38,29 @@ contains
     !> Integra las N trayectorias y devuelve sum(x + y) del estado final.
     function integrar(n, pasos) result(suma)
         integer, intent(in) :: n, pasos
-        real(real64) :: suma
-        real(real64) :: x, y, x2, y2, x3, y3, x4, y4, k1x, k1y, k2x, k2y, k3x, k3y, k4x, k4y
+        double precision :: suma
+        double precision :: x, y, x2, y2, x3, y3, x4, y4, k1x, k1y, k2x, k2y, k3x, k3y, k4x, k4y
         integer :: i, k
 
-        suma = 0.0_real64
+        suma = 0.0d0
         do i = 1, n
             ! Condiciones iniciales deterministas e independientes de N.
-            x = -3.0_real64 + 6.0_real64 * mod(37 * i, 1000) / 1000.0_real64
-            y = -3.0_real64 + 6.0_real64 * mod(53 * i, 1000) / 1000.0_real64
+            x = -3.0d0 + 6.0d0 * mod(37 * i, 1000) / 1000.0d0
+            y = -3.0d0 + 6.0d0 * mod(53 * i, 1000) / 1000.0d0
             do k = 1, pasos
                 k1x = y
-                k1y = -mu * (x * x - 1.0_real64) * y - x
-                x2 = x + 0.5_real64 * h * k1x;  y2 = y + 0.5_real64 * h * k1y
+                k1y = -mu * (x * x - 1.0d0) * y - x
+                x2 = x + 0.5d0 * h * k1x;  y2 = y + 0.5d0 * h * k1y
                 k2x = y2
-                k2y = -mu * (x2 * x2 - 1.0_real64) * y2 - x2
-                x3 = x + 0.5_real64 * h * k2x;  y3 = y + 0.5_real64 * h * k2y
+                k2y = -mu * (x2 * x2 - 1.0d0) * y2 - x2
+                x3 = x + 0.5d0 * h * k2x;  y3 = y + 0.5d0 * h * k2y
                 k3x = y3
-                k3y = -mu * (x3 * x3 - 1.0_real64) * y3 - x3
+                k3y = -mu * (x3 * x3 - 1.0d0) * y3 - x3
                 x4 = x + h * k3x;  y4 = y + h * k3y
                 k4x = y4
-                k4y = -mu * (x4 * x4 - 1.0_real64) * y4 - x4
-                x = x + h / 6.0_real64 * (k1x + 2.0_real64 * k2x + 2.0_real64 * k3x + k4x)
-                y = y + h / 6.0_real64 * (k1y + 2.0_real64 * k2y + 2.0_real64 * k3y + k4y)
+                k4y = -mu * (x4 * x4 - 1.0d0) * y4 - x4
+                x = x + h / 6.0d0 * (k1x + 2.0d0 * k2x + 2.0d0 * k3x + k4x)
+                y = y + h / 6.0d0 * (k1y + 2.0d0 * k2y + 2.0d0 * k3y + k4y)
             end do
             suma = suma + x + y
         end do

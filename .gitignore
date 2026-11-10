@@ -1,43 +1,44 @@
-# Objetos y módulos compilados
+# Objetos, módulos y ejecutables
 *.o
 *.obj
 *.mod
 *.smod
-
-# Ejecutables
 *.exe
 *.out
+.vscode/mod/
+
+# Ejecutables en Linux y macOS (sin extensión)
 02_hola_mundo/hola
-02_hola_mundo/ejercicio
 03_variables_y_bucles/tipos
 03_variables_y_bucles/heron
-03_variables_y_bucles/basilea
 04_arrays_y_archivos/arrays
 04_arrays_y_archivos/matrices
 04_arrays_y_archivos/tabla
-05_figuras_con_python/espiral
-06_euler/euler_explicito
-06_euler/euler_implicito
-07_modulos_y_make/euler
-07_modulos_y_make/euler_debug
-07_modulos_y_make/error_indice
-07_modulos_y_make/error_indice_debug
-08_runge_kutta/rk
-08_runge_kutta/rk_debug
-08_runge_kutta/orden
-08_runge_kutta/orden_debug
-09_retrato_de_fases/retrato
-09_retrato_de_fases/retrato_debug
-10_rigidez/rigidez
-10_rigidez/rigidez_debug
-10_rigidez/orden
-10_rigidez/orden_debug
+05_euler/euler_explicito
+05_euler/euler_implicito
+06_visualizacion/espiral
+07_entrada_de_datos/euler
+08_modulos_y_make/euler
+08_modulos_y_make/error_indice
+09_runge_kutta/rk
+09_runge_kutta/orden
+10_retrato_de_fases/retrato
+11_elementos_finitos/fem
+11_elementos_finitos/orden_espacial
 01_instalacion/comprobacion
 00_propaganda/bin/
 
-# Carpetas de compilación y resultados
-build/
+# Lo que generan los programas
 resultados/
+build/
+04_arrays_y_archivos/*.dat
+05_euler/*.dat
+06_visualizacion/*.dat
+06_visualizacion/*.png
+07_entrada_de_datos/*.dat
+07_entrada_de_datos/*.png
+08_modulos_y_make/*.dat
+08_modulos_y_make/*.png
 
 # Python, Julia, Matlab
 __pycache__/
@@ -45,15 +46,7 @@ __pycache__/
 Manifest.toml
 
 # Varios
-.vscode/mod/
 *.swp
-
-# Datos y figuras que se generan en la carpeta de cada unidad
-04_arrays_y_archivos/tabla.dat
-05_figuras_con_python/*.dat
-05_figuras_con_python/*.png
-06_euler/*.dat
-06_euler/*.png
 
 # Guion personal del profesor (no se publica)
 guion_profesor/

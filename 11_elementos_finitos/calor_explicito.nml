@@ -1,0 +1,15 @@
+! La misma ecuación, con Euler explícito y un paso que ya es demasiado grande para
+! esta malla: dt = 0.001, cuando el límite está cerca de h_x**2 / (6 d) = 0.00067.
+! Con t_final = 0.056 se ve nacer la inestabilidad; con t_final = 1.0, explota.
+&parametros
+    longitud     = 1.0
+    n_elementos  = 50
+    d            = 0.1
+    r            = 0.0
+    dt           = 0.001
+    t_final      = 0.056
+    metodo       = 'explicito'
+    condicion    = 'coseno'
+    n_guardados  = 14
+    archivo_salida = 'resultados/calor_explicito.dat'
+/

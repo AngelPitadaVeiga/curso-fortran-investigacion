@@ -1,0 +1,13 @@
+! Van der Pol con mu = 1000 (rígido), con el mismo paso en los tres archivos
+! rigido_*.nml. Solo hasta t = 1000: el primer salto rápido ocurre en t = 807.
+! Se escribe un paso de cada 50 para no llenar el disco.
+&parametros
+    metodo  = 'euler_implicito'
+    mu      = 1000.0
+    h       = 0.002
+    t_final = 1000.0
+    x0      = 2.0
+    y0      = 0.0
+    paso_escritura = 50
+    archivo_salida = 'resultados/rigido_euler_implicito.dat'
+/

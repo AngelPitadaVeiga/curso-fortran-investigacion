@@ -1,0 +1,11 @@
+! Lo mismo que rigido_euler_implicito.nml, con la regla del trapecio.
+&parametros
+    metodo  = 'trapecio'
+    mu      = 1000.0
+    h       = 0.002
+    t_final = 1000.0
+    x0      = 2.0
+    y0      = 0.0
+    paso_escritura = 50
+    archivo_salida = 'resultados/rigido_trapecio.dat'
+/

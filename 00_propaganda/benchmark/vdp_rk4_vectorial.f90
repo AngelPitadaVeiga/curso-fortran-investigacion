@@ -7,11 +7,11 @@
 !>
 !> Uso:  vdp_rk4_vectorial_f [N] [pasos] [repeticiones]
 program vdp_rk4_vectorial
-    use iso_fortran_env, only: real64, int64
+    use iso_fortran_env, only: int64
     implicit none
     integer :: n, pasos, repeticiones, r
-    real(real64), parameter :: mu = 1.0_real64, h = 0.01_real64
-    real(real64) :: suma, mejor
+    double precision, parameter :: mu = 1.0d0, h = 0.01d0
+    double precision :: suma, mejor
     integer(int64) :: t0, t1, ticks
     character(len=32) :: texto_tiempo, texto_suma
 
@@ -19,12 +19,12 @@ program vdp_rk4_vectorial
     pasos = argumento(2, 1000)
     repeticiones = argumento(3, 3)
 
-    mejor = huge(1.0_real64)
+    mejor = huge(1.0d0)
     do r = 1, repeticiones
         call system_clock(t0, ticks)
         suma = integrar(n, pasos)
         call system_clock(t1)
-        mejor = min(mejor, real(t1 - t0, real64) / ticks)
+        mejor = min(mejor, dble(t1 - t0) / ticks)
     end do
 
     write(texto_tiempo, '(es12.5)') mejor
@@ -35,27 +35,27 @@ program vdp_rk4_vectorial
 contains
 
     pure function campo(u) result(du)
-        real(real64), intent(in) :: u(2)
-        real(real64) :: du(2)
-        du = [u(2), -mu * (u(1) * u(1) - 1.0_real64) * u(2) - u(1)]
+        double precision, intent(in) :: u(2)
+        double precision :: du(2)
+        du = [u(2), -mu * (u(1) * u(1) - 1.0d0) * u(2) - u(1)]
     end function campo
 
     function integrar(n, pasos) result(suma)
         integer, intent(in) :: n, pasos
-        real(real64) :: suma
-        real(real64), dimension(2) :: u, k1, k2, k3, k4
+        double precision :: suma
+        double precision, dimension(2) :: u, k1, k2, k3, k4
         integer :: i, k
 
-        suma = 0.0_real64
+        suma = 0.0d0
         do i = 1, n
-            u = [-3.0_real64 + 6.0_real64 * mod(37 * i, 1000) / 1000.0_real64, &
-                 -3.0_real64 + 6.0_real64 * mod(53 * i, 1000) / 1000.0_real64]
+            u = [-3.0d0 + 6.0d0 * mod(37 * i, 1000) / 1000.0d0, &
+                 -3.0d0 + 6.0d0 * mod(53 * i, 1000) / 1000.0d0]
             do k = 1, pasos
                 k1 = campo(u)
-                k2 = campo(u + 0.5_real64 * h * k1)
-                k3 = campo(u + 0.5_real64 * h * k2)
+                k2 = campo(u + 0.5d0 * h * k1)
+                k3 = campo(u + 0.5d0 * h * k2)
                 k4 = campo(u + h * k3)
-                u = u + h / 6.0_real64 * (k1 + 2.0_real64 * k2 + 2.0_real64 * k3 + k4)
+                u = u + h / 6.0d0 * (k1 + 2.0d0 * k2 + 2.0d0 * k3 + k4)
             end do
             suma = suma + u(1) + u(2)
         end do

@@ -10,9 +10,12 @@
     "fortran.linter.extraArgs": ["-std=f2018", "-fimplicit-none"],
     // Los .mod que genera el linter van a una carpeta aparte (ignorada por git).
     "fortran.linter.modOutput": "${workspaceFolder}/.vscode/mod",
+    // Los módulos de cada unidad se compilan con make en su propia carpeta:
+    // el linter los busca ahí. Antes de ejecutar make por primera vez es normal
+    // que marque "Cannot open module file".
     "fortran.linter.includePaths": [
         "${workspaceFolder}/.vscode/mod",
-        "${workspaceFolder}/**/build/release"
+        "${workspaceFolder}/**"
     ],
 
     // Escribir las palabras clave en minúsculas.
@@ -34,6 +37,8 @@
         // Columnas 6 y 72: límites del formato fijo.
         "editor.rulers": [6, 72]
     },
+    // Makefile Tools no necesita configurarse para lanzar make desde la terminal.
+    "makefile.configureOnOpen": false,
     "[makefile]": {
         // Las recetas de un Makefile exigen tabuladores.
         "editor.insertSpaces": false

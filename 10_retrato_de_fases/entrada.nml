@@ -1,0 +1,10 @@
+&parametros
+    mu = 1.0
+    h = 0.001
+    t_transitorio = 100.0    ! se integra y se descarta, para llegar al ciclo
+    t_ciclo       = 20.0     ! tramo del ciclo límite que se dibuja (más de un periodo)
+    t_trayectoria = 10.0     ! duración de cada trayectoria de la rejilla
+    n_flechas     = 51       ! rejilla de flechas: 51 x 51
+    n_condiciones = 15       ! rejilla de condiciones iniciales: 15 x 15
+    paso_escritura = 10      ! se escribe un punto de cada 10
+/

@@ -8,24 +8,23 @@
 !>     gfortran heron.f90 -o heron
 !>     ./heron
 program heron
-    use iso_fortran_env, only: real64
     implicit none
 
     ! parameter: constantes con nombre (no se pueden modificar).
-    real(real64), parameter :: a = 2.0_real64          ! calculamos sqrt(a)
-    real(real64), parameter :: tol = 1.0e-15_real64
+    double precision, parameter :: a = 2.0d0           ! calculamos sqrt(a)
+    double precision, parameter :: tol = 1.0d-15
     integer, parameter :: max_iter = 50
 
-    real(real64) :: x, x_nuevo
+    double precision :: x, x_nuevo
     integer :: k
 
     x = a                                              ! estimación inicial
     print '(a)', ' iter                     x         error'
     do k = 1, max_iter
-        x_nuevo = 0.5_real64 * (x + a / x)
+        x_nuevo = 0.5d0 * (x + a / x)
         ! i5: entero en 5 columnas; f22.16: real con 16 decimales; es10.2: notación científica
         print '(i5, f22.16, es10.2)', k, x_nuevo, abs(x_nuevo - sqrt(a))
-        if (abs(x_nuevo - x) <= tol * x_nuevo) exit    ! sale del bucle (cuando 'estaciona' para una cierta tolerancia)
+        if (abs(x_nuevo - x) <= tol * x_nuevo) exit    ! sale del bucle cuando x ya casi no cambia
         x = x_nuevo
     end do
 

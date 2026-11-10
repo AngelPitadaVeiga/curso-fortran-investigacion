@@ -1,0 +1,8 @@
+&parametros
+    mu      = 1.0
+    h       = 0.01
+    t_final = 30.0
+    x0      = 0.5
+    y0      = 0.0
+    archivo_salida = 'euler.dat'
+/

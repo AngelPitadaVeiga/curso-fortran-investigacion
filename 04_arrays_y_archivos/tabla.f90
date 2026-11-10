@@ -1,13 +1,13 @@
-!> Escribe una tabla  x  sin(x)  cos(x)  en tabla.dat. La dibujaremos en la unidad 05.
+!> Escribe una tabla  x  sin(x)  cos(x)  en tabla.dat.
+!> La dibujaremos en la unidad 06.
 !>
 !>     gfortran tabla.f90 -o tabla
 !>     ./tabla
 program tabla
-    use iso_fortran_env, only: real64
     implicit none
     integer, parameter :: n = 200
-    real(real64), parameter :: pi = acos(-1.0_real64)
-    real(real64) :: x(0:n)
+    double precision, parameter :: pi = acos(-1.0d0)
+    double precision :: x(0:n)
     integer :: i, unidad
 
     x = [(2 * pi * i / n, i = 0, n)]       ! n + 1 puntos en [0, 2 pi]
