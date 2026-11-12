@@ -1,0 +1,12 @@
+! Una simulación larga (3000, unos 450 periodos) con un punto escrito cada 0.1,
+! para compararla con la referencia de la unidad 05 con retraso.py.
+&parametros
+    metodo  = 'rk4'          ! euler, heun, rk4, euler_implicito o trapecio
+    mu      = 1.0
+    h       = 0.01
+    t_final = 3000.0
+    x0      = 0.5
+    y0      = 0.0
+    paso_escritura = 10
+    archivo_salida = 'resultados/largo.dat'
+/

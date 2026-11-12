@@ -33,14 +33,14 @@ def envolvente(t, error, ancho=7.0):
     return t[:len(t) - n + 1], sliding_window_view(error, n).max(axis=1)
 
 
-# Para qué sirve cada cifra: el periodo y la amplitud del ciclo, y cuándo se despega el Euler.
-print(f"{'':>10} {'periodo':>9} {'amplitud':>9} {'t con error > 0.5':>18}")
+# Periodo y amplitud del ciclo, y el primer instante en que el error de x supera 0.5.
+print(f"{'':>10} {'periodo':>9} {'amplitud':>9} {'t con |error| > 0.5':>20}")
 for nombre, tt, x, x_ref in [("referencia", t_r, x_r, x_r), ("explicito", t, x_e, x_ref_e),
                               ("implicito", t_i, x_i, x_ref_i)]:
     tv, env = envolvente(tt, np.abs(x - x_ref))
-    despega = tv[np.argmax(env > 0.5)] if (env > 0.5).any() else float("nan")
+    despega = f"{tv[np.argmax(env > 0.5)]:.0f}" if (env > 0.5).any() else "-"
     ultimos = tt > tt[-1] / 2
-    print(f"{nombre:>10} {periodo(tt, x):9.4f} {np.abs(x[ultimos]).max():9.4f} {despega:18.0f}")
+    print(f"{nombre:>10} {periodo(tt, x):9.4f} {np.abs(x[ultimos]).max():9.4f} {despega:>20}")
 
 fig, (izquierda, centro, derecha) = plt.subplots(1, 3, figsize=(15, 4.6))
 
