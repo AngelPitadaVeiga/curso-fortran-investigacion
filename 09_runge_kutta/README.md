@@ -1,15 +1,15 @@
 # Unidad 09 · Runge–Kutta
 
-Euler es de orden 1, y ya vimos que con pasos moderados se rompe. Aquí ponemos tres métodos más
-en el mismo módulo y usamos el que queramos desde el archivo de entrada:
+Euler tiene orden 1: pierde la fase en tiempos largos y falla con pasos moderados. Esta unidad reúne
+cinco métodos en un módulo y permite elegir el que se usa desde el archivo de entrada:
 
-| Método | Orden | Qué hace |
+| Método | Orden | Fórmula |
 |---|---:|---|
 | `euler` | 1 | `u + h F(u)` |
-| `heun` | 2 | promedia la pendiente del principio y la del final del paso |
-| `rk4` | 4 | el Runge–Kutta clásico, con cuatro evaluaciones |
+| `heun` | 2 | promedio de la pendiente al principio y al final del paso |
+| `rk4` | 4 | Runge–Kutta clásico, con cuatro evaluaciones de `F` |
 | `euler_implicito` | 1 | el de la unidad 05 |
-| `trapecio` | 2 | la versión implícita de Heun |
+| `trapecio` | 2 | versión implícita de Heun |
 
 ```
 09_runge_kutta/
@@ -17,9 +17,9 @@ en el mismo módulo y usamos el que queramos desde el archivo de entrada:
 ├── runge_kutta.f90    los métodos
 ├── principal.f90      el programa rk: lee, integra y escribe
 ├── orden.f90          el programa orden: mide el orden de cada método
-├── entrada.nml, rigido_*.nml
+├── entrada.nml, largo.nml, rigido_*.nml
 ├── Makefile
-└── graficar.py, graficar_orden.py, graficar_rigido.py
+└── graficar.py, graficar_orden.py, graficar_rigido.py, retraso.py
 ```
 
 ```bash
@@ -27,13 +27,13 @@ make run                  # RK4 con entrada.nml
 python graficar.py
 ```
 
-Para cambiar de método, edita `metodo` en `entrada.nml`: `euler`, `heun`, `rk4`,
-`euler_implicito` o `trapecio`. No hay que recompilar.
+El método se elige con `metodo` en `entrada.nml`: `euler`, `heun`, `rk4`, `euler_implicito` o
+`trapecio`. No hace falta recompilar.
 
-## Cómo está escrito
+## Estructura del código
 
-Cada método es una función que recibe el estado `u_k` y devuelve `u_{k+1}`. Este es RK4, tal como
-sale en cualquier libro:
+Cada método es una función que recibe el estado `u_k` y devuelve `u_{k+1}`. RK4 se escribe igual que en
+los libros:
 
 ```fortran
 function paso_rk4(u, mu, h) result(u_nuevo)
@@ -47,28 +47,55 @@ function paso_rk4(u, mu, h) result(u_nuevo)
 end function paso_rk4
 ```
 
-La subrutina `integrar` recorre los pasos y, en cada uno, elige la función con un `select case`
-según el nombre del método. No es lo más eficiente del mundo, porque compara un texto cada paso,
-pero se lee de maravilla, y para lo que hacemos la diferencia no se nota.
+La subrutina `integrar` recorre los pasos y en cada uno elige la función con un `select case`, según
+el nombre del método. Comparar un texto en cada paso no es lo más eficiente, pero el código se lee con facilidad, y en
+estas unidades se da prioridad a eso.
 
-Los dos implícitos comparten una función, `paso_implicito`, que tiene un parámetro `theta`:
-`theta = 1` es Euler implícito y `theta = 1/2` es el trapecio. Resuelve el sistema con Newton,
-igual que en la unidad 05.
+Los dos métodos implícitos comparten la función `paso_implicito`, que tiene un parámetro `theta`:
+`theta = 1` es Euler implícito y `theta = 1/2` es el trapecio. La función resuelve el sistema con
+Newton, igual que en la unidad 05.
 
-## ¿Y lo de `h = 0.4`?
+## Paso grande
 
-En la unidad 06, Euler explícito explotaba con `h = 0.4`. Prueba a poner `h = 0.4` y `rk4`
-en `entrada.nml`:
+En la unidad 06, Euler explícito explotaba con `h = 0.4`. Con `h = 0.4` y `rk4` en `entrada.nml`:
 
 ![RK4 con h = 0.4](figuras/rk4_h04.png)
 
-El ciclo límite sale con amplitud 2,00, y casi se ve a simple vista que es el ciclo.
+El ciclo límite sale con amplitud 2,00.
 
-## ¿Cómo sé que está bien escrito?
+## Tiempos largos
 
-Midiendo el orden de convergencia. Si un método es de orden `p`, al dividir `h` entre dos el
-error se divide por `2^p`. `make run-orden` integra hasta `t = 1` con `h = 0.1, 0.05, 0.025,
-0.0125`, compara con una referencia (RK4 con `h = 10⁻⁴`) y calcula el orden:
+La unidad 06 midió el retraso de fase de Euler a `t = 3000`. `largo.nml` repite la simulación con el
+método que se elija, y `retraso.py` lo compara con la referencia de la unidad 05 (que hay que haber
+ejecutado):
+
+```bash
+./rk largo.nml
+python retraso.py resultados/largo.dat
+```
+
+Retraso respecto a la referencia a `t ≈ 3000`, en periodos (un valor positivo es un retraso, y uno
+negativo, un adelanto):
+
+| Método | `h = 0.01` | `h = 0.1` |
+|---|---:|---:|
+| `euler` | 3,34 | 37,7 |
+| `heun` | −0,012 | −0,91 |
+| `rk4` | 0,000 | 0,005 |
+| `euler_implicito` | −3,22 | −26,7 |
+| `trapecio` | 0,006 | 0,58 |
+
+RK4 con `h = 0.1` (30 000 pasos) conserva la fase mejor que Euler con `h = 0.01` (300 000 pasos), y
+también que Euler con `h = 0.0001` en el mismo intervalo (su retraso a `t = 3000` es de 0,03
+periodos, con 3·10⁷ pasos). Con `h = 0.01`, RK4 y el trapecio no pierden la fase de forma apreciable
+en 450 periodos.
+
+## Comprobación del orden
+
+El orden de convergencia permite comprobar que un método está bien programado. Si un método tiene
+orden `p`, al dividir `h` entre dos el error se divide por `2^p`. `make run-orden` integra hasta
+`t = 1` con `h = 0.1, 0.05, 0.025, 0.0125`, compara con una referencia (RK4 con `h = 10⁻⁴`) y calcula
+el orden:
 
 ```
             metodo   orden teorico   orden observado
@@ -85,15 +112,14 @@ python graficar_orden.py
 
 ![Convergencia](figuras/orden.png)
 
-En escala logarítmica, cada método es una recta cuya pendiente es su orden. Es la forma más
-barata de descubrir un coeficiente mal escrito: si un orden se desvía, el programa dice
-`FALLA`.
+En escala logarítmica cada método es una recta cuya pendiente es su orden. Un coeficiente mal
+escrito cambia la pendiente. Si un orden se desvía más de 0,3 del teórico, el programa escribe
+`FALLA` y termina con un código de error.
 
-## La rigidez
+## Rigidez
 
-Un último ejemplo: Van der Pol con `mu = 1000`. Con `mu` tan grande aparecen dos escalas de
-tiempo muy distintas, y a eso se le llama rigidez. Compara lo que hacen los métodos con el mismo
-paso, `h = 0.002`:
+Van der Pol con `mu = 1000` tiene dos escalas de tiempo muy distintas, y esa propiedad se llama
+rigidez. Se comparan los métodos con el mismo paso, `h = 0.002`:
 
 ```bash
 make run-rigido
@@ -111,24 +137,25 @@ La solucion ha explotado en el paso 6, t = 1.20E-02
 
 ![Rigidez](figuras/rigido.png)
 
-RK4, que es de orden 4, explota a los seis pasos. Los dos implícitos, uno de orden 1 y otro de
-orden 2, terminan sin ningún problema. En esta zona, el jacobiano tiene un autovalor de
-unos −3000, y RK4 necesitaría un paso por debajo de `10⁻³` para ser estable, aunque la
-solución apenas cambie. Es el paso, y no la precisión, lo que limita al método explícito. Los
-implícitos no tienen esa restricción.
+RK4, de orden 4, explota a los seis pasos. Los dos implícitos, de orden 1 y 2, llegan al final. En esa
+zona el jacobiano tiene un autovalor de unos −3000, y RK4 solo es estable con `h` menor que `10⁻³`,
+aunque la solución varíe despacio. El paso queda limitado por la estabilidad y no por la precisión.
+Los métodos implícitos no tienen esa restricción.
 
-Eso sí, los dos implícitos son poco precisos: los dos hacen el salto rápido en `t = 807`, pero
-después de él cada uno llega a un valor distinto. Para integrar varios ciclos con esta
-precisión hacen falta métodos implícitos de orden alto, como los Radau, que se escriben igual pero
-con más etapas (RADAU5, de Hairer y Wanner, es un código en Fortran muy conocido).
+Los dos implícitos son poco precisos. Ambos saltan en `t = 807`, pero después del salto llegan a
+valores distintos. Para integrar varios ciclos con precisión se necesitan métodos implícitos de orden
+alto, como los de la familia Radau, que se escriben igual con más etapas. RADAU5, de Hairer y Wanner,
+es un código en Fortran muy utilizado.
 
-Esto lo volveremos a ver en la última unidad, con otro disfraz.
+La unidad 11 vuelve a encontrar este problema, en otro contexto.
 
 ## Ejercicios
 
 1. Escribe en Fortran un `paso_ralston`, el método de orden 2 con `k2 = F(u + 2h/3 k1)` y
-   `u_nuevo = u + h (k1 + 3 k2) / 4`. Añádelo a `integrar` y comprueba con `orden` que es de orden 2.
-2. Rompe un coeficiente de RK4 (cambia el `/ 6` por `/ 7`) y pasa el test. ¿Qué orden sale?
-3. Con `mu = 5` y `h = 0.1`, compara Euler, Heun y RK4. ¿Cuál mantiene mejor el ciclo límite?
-4. Busca a mano el `h` más grande con el que RK4 no explota con `mu = 1000`. Pon `t_final = 5`
-   para no esperar.
+   `u_nuevo = u + h (k1 + 3 k2) / 4`. Añádelo a `integrar` y comprueba con `orden` que tiene orden 2.
+2. Cambia el `/ 6` de RK4 por `/ 7` y ejecuta `orden`. Anota el orden que resulta.
+3. Con `mu = 5` y `h = 0.1`, compara Euler, Heun y RK4 y decide cuál conserva mejor el ciclo límite.
+4. Busca el mayor `h` con el que RK4 no explota para `mu = 1000`. Usa `t_final = 5` para acortar las
+   pruebas.
+5. Con `largo.nml`, mide el retraso de Heun para `h = 0.05` y comprueba que queda entre los valores de
+   la tabla para `h = 0.01` y `h = 0.1`.

@@ -1,24 +1,24 @@
 # Unidad 00 · Propaganda
 
-¿Por qué aprender un lenguaje de 1957? No porque sea más rápido que el resto: bien
-escritos, Fortran y C++ van igual. La razón es otra: en Fortran es fácil escribir código
-rápido y difícil escribirlo lento.
+Fortran no es más rápido que los demás lenguajes compilados: bien escritos, Fortran y C++ producen el
+mismo código. La ventaja es otra. Un programa de cálculo escrito de la forma más natural en Fortran
+suele ser rápido, y el mismo estilo en otros lenguajes puede ser mucho más lento.
 
-## Un lenguaje hecho por matemáticos
+## Un lenguaje de matemáticos
 
-Fortran viene de *FORmula TRANslation*. Lo hizo en IBM un equipo de matemáticos y
-científicos dirigido por John Backus, con una idea muy concreta: que escribir una fórmula en
-el ordenador se pareciera a escribirla en un papel.
+El nombre viene de *FORmula TRANslation*. Lo diseñó en IBM un equipo de matemáticos y científicos
+dirigido por John Backus, con el objetivo de que una fórmula se escribiera en el ordenador de forma
+parecida a como se escribe en papel.
 
-Se nota. Es un lenguaje muy natural para hacer matemáticas y bastante incómodo para la
-programación genérica que les gusta a los informáticos. Los vectores y las matrices son parte
-del lenguaje, los índices empiezan en 1 (o donde quieras) y `c = a + 2*b` funciona sin
-bucles y sin bibliotecas.
+Eso se nota en el lenguaje. Los vectores y las matrices forman parte de él, los índices empiezan en 1
+o en el valor que se elija, y `c = a + 2*b` suma vectores sin bucles ni bibliotecas. En cambio,
+Fortran está peor adaptado a la programación genérica: manejo de texto, estructuras de datos
+complejas o aplicaciones web.
 
-## Una comparación
+## Medidas
 
-Escribimos el mismo programa en varios lenguajes: RK4 de paso fijo para Van der Pol desde
-muchas condiciones iniciales, con el mismo algoritmo y los mismos parámetros en todos.
+Se escribió el mismo programa en varios lenguajes: Runge–Kutta de orden 4 con paso fijo para Van der
+Pol, desde muchas condiciones iniciales, con el mismo algoritmo y los mismos parámetros.
 
 | Versión | ns por paso | Veces Fortran |
 |---|---:|---:|
@@ -30,25 +30,25 @@ muchas condiciones iniciales, con el mismo algoritmo y los mismos parámetros en
 | Python puro | 247 | 34 |
 | Matlab, con vectores y función anónima | 347 | 48 |
 
-Medido en un Intel Core i7-14700 con Windows 11, GCC 14.2, Julia 1.13, Python 3.12, NumPy 2.5
-y Matlab R2025b. Todas las versiones dan el mismo resultado, salvo redondeo.
+Las medidas son de un Intel Core i7-14700 con Windows 11, GCC 14.2, Julia 1.13, Python 3.12, NumPy 2.5
+y Matlab R2025b. Todas las versiones dan el mismo resultado salvo redondeo.
 
 ![Benchmark](figuras/benchmark_i7-14700.png)
 
-Lo que más nos interesa son las dos filas de Fortran. La versión cómoda, con arrays y
-funciones que devuelven vectores, va igual de rápido que la escrita a mano con escalares. En
-Matlab o en Python ese mismo estilo sale carísimo.
+Las dos filas de Fortran son las más relevantes. La versión con arrays pequeños y funciones que
+devuelven vectores tarda lo mismo que la escrita con escalares. En Matlab y en Python, ese estilo
+multiplica el tiempo de ejecución.
 
-## Otras razones
+## Otros datos
 
-Fortran es muy estable: un programa en FORTRAN 77 sigue compilando hoy. Está debajo de casi
-todo, porque BLAS y LAPACK, en los que se apoyan Matlab, Julia y NumPy para el álgebra lineal,
-nacieron en Fortran. Y se sigue usando mucho en códigos de clima, física y química
-computacional, como WRF, VASP o Quantum ESPRESSO. Además, no hay que elegir: se puede llamar
-desde Julia, Python o C.
+- Un programa escrito en FORTRAN 77 compila hoy sin cambios.
+- BLAS y LAPACK, que usan Matlab, Julia y NumPy para el álgebra lineal, se escribieron en Fortran.
+- WRF, VASP y Quantum ESPRESSO, entre otros códigos de clima, física y química, están escritos en
+  Fortran.
+- Fortran puede llamarse desde Julia, Python y C.
 
 ## Cuándo no usarlo
 
-Para manejar texto, hacer interfaces, explorar datos o entrenar redes neuronales, Python y
-Julia son mucho más cómodos. La regla que yo sigo es sencilla: el núcleo numérico que tarda
-horas, en Fortran, y todo lo demás en lo que te resulte más cómodo.
+El tratamiento de texto, las interfaces, la exploración de datos y el aprendizaje automático se
+resuelven mejor con Python o Julia. El criterio razonable es escribir en Fortran el núcleo numérico
+que tarda horas y usar otro lenguaje para el resto.
