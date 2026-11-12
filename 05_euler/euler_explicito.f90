@@ -5,6 +5,9 @@
 !>
 !> Método:  u_{k+1} = u_k + h*F(u_k),  con u = (x, y).
 !>
+!> Se integra durante mucho tiempo (3000, unos 450 periodos) y se escribe un punto
+!> cada 0.1 de tiempo, sea cual sea h.
+!>
 !>     gfortran euler_explicito.f90 -o euler_explicito
 !>     ./euler_explicito
 program euler_explicito
@@ -14,13 +17,15 @@ program euler_explicito
     ! (en la unidad 07 se leerán de un archivo de entrada).
     double precision, parameter :: mu = 1.0d0
     double precision, parameter :: h = 0.01d0
-    double precision, parameter :: t_final = 30.0d0
+    double precision, parameter :: t_final = 3000.0d0
+    double precision, parameter :: dt_escritura = 0.1d0
     double precision, parameter :: x0 = 0.5d0, y0 = 0.0d0
 
     double precision :: u(2)             ! estado actual (x, y)
-    integer :: k, n_pasos, unidad
+    integer :: k, n_pasos, paso_escritura, unidad
 
     n_pasos = nint(t_final / h)          ! nint: entero más próximo
+    paso_escritura = max(1, nint(dt_escritura / h))
     u = [x0, y0]
 
     open(newunit=unidad, file="euler_explicito.dat", status="replace", action="write")
@@ -28,7 +33,7 @@ program euler_explicito
     write(unidad, '(3es24.16)') 0.0d0, u
     do k = 1, n_pasos
         u = u + h * campo(u)             ! un paso de Euler, con arrays
-        write(unidad, '(3es24.16)') k * h, u
+        if (mod(k, paso_escritura) == 0) write(unidad, '(3es24.16)') k * h, u
         if (maxval(abs(u)) > 1.0d6) then
             print '(a, f7.2)', 'La solucion ha explotado en t =', k * h
             exit

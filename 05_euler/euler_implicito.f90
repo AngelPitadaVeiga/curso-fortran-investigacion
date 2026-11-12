@@ -3,6 +3,8 @@
 !> Método:  u_{k+1} = u_k + h*F(u_{k+1}).  La incógnita aparece a los dos lados,
 !> así que en cada paso hay que resolver un sistema no lineal (aquí, con Newton).
 !>
+!> Igual que euler_explicito.f90: tiempo final 3000 y un punto escrito cada 0.1.
+!>
 !>     gfortran euler_implicito.f90 -o euler_implicito
 !>     ./euler_implicito
 program euler_implicito
@@ -10,13 +12,15 @@ program euler_implicito
 
     double precision, parameter :: mu = 1.0d0
     double precision, parameter :: h = 0.01d0
-    double precision, parameter :: t_final = 30.0d0
+    double precision, parameter :: t_final = 3000.0d0
+    double precision, parameter :: dt_escritura = 0.1d0
     double precision, parameter :: x0 = 0.5d0, y0 = 0.0d0
 
     double precision :: u(2)             ! estado actual (x, y)
-    integer :: k, n_pasos, unidad, iteraciones
+    integer :: k, n_pasos, paso_escritura, unidad, iteraciones
 
     n_pasos = nint(t_final / h)
+    paso_escritura = max(1, nint(dt_escritura / h))
     u = [x0, y0]
 
     open(newunit=unidad, file="euler_implicito.dat", status="replace", action="write")
@@ -24,7 +28,7 @@ program euler_implicito
     write(unidad, '(3es24.16)') 0.0d0, u
     do k = 1, n_pasos
         call paso_euler_implicito(u, h, iteraciones)
-        write(unidad, '(3es24.16)') k * h, u
+        if (mod(k, paso_escritura) == 0) write(unidad, '(3es24.16)') k * h, u
     end do
     close(unidad)
 
