@@ -1,8 +1,5 @@
 # Unidad 03 · Variables, tipos y bucles
 
-Esta unidad presenta la declaración de variables, la elección de la precisión, las decisiones con
-`if` y las repeticiones con `do`. Consta de dos programas, cada uno en un solo archivo.
-
 ```bash
 gfortran tipos.f90 -o tipos
 ./tipos
@@ -20,29 +17,22 @@ gfortran heron.f90 -o heron
 | `logical` | `.true.` | `Bool` | `bool` |
 | `character(len=20)` | `"Van der Pol"` | `String` | `std::string` |
 
-Todas las declaraciones van al principio del programa, antes de la primera instrucción. En Julia y en
-Matlab no existe esa norma.
+Las declaraciones van al principio del programa, antes de la primera instrucción.
 
-El tipo `real` ocupa 32 bits y da unas siete cifras decimales, insuficientes para el cálculo
-científico. En el curso se usa siempre `double precision`, que ocupa 64 bits y da unas dieciséis cifras.
-Forma parte del lenguaje y no requiere importar nada.
-
-En códigos de otras personas aparecen también `real(real64)` y `real(8)`. Ambos piden 64 bits. El
-primero necesita la línea `use iso_fortran_env, only: real64` al principio del programa. El segundo
-funciona en gfortran, aunque el estándar no garantiza que el 8 equivalga a 64 bits. El curso usa
-`double precision` porque no necesita ninguna línea adicional.
+`real` ocupa 32 bits y da unas siete cifras, insuficientes para cálculo científico. En el curso se
+usa siempre `double precision`: 64 bits, unas dieciséis cifras, y no necesita importar nada. En
+códigos de otras personas aparecen `real(real64)` y `real(8)`, que también piden 64 bits. El primero
+necesita `use iso_fortran_env, only: real64`, y el segundo no está garantizado por el estándar.
 
 ## Dos errores frecuentes
 
-`tipos.f90` reproduce los dos primeros errores que cometen quienes llegan desde otros lenguajes.
+`tipos.f90` reproduce los dos primeros errores de quien llega desde otro lenguaje.
 
-**División entera.** `7/2` vale `3`, porque ambos operandos son enteros. Basta con que uno de ellos
-sea real: `7/2.0d0` vale `3.5`.
+**División entera.** `7/2` vale `3`. Basta con que un operando sea real: `7/2.0d0` vale `3.5`.
 
-**Constantes sin sufijo.** `b = 0.1` no guarda 0,1 en doble precisión. La constante `0.1` es de
-simple precisión y se convierte a doble después de redondearla. La forma correcta es `0.1d0`, donde
-`d0` indica doble precisión. En Matlab y en Julia la constante `0.1` ya es doble, y de ahí viene el
-error al traducir código.
+**Constantes sin sufijo.** `b = 0.1` no guarda 0,1 en doble precisión: la constante `0.1` es de
+simple precisión y se convierte después. Hay que escribir `0.1d0`. En Matlab y en Julia `0.1` ya es
+doble, y de ahí el error al traducir código.
 
 ```
  b = 0.1    ->  0.10000000149011612
@@ -51,7 +41,7 @@ error al traducir código.
 
 ## `heron.f90`
 
-Calcula la raíz cuadrada de 2 con el método de Herón, que es el método de Newton para `x² − 2 = 0`:
+Raíz cuadrada de 2 con el método de Herón, que es Newton para `x² − 2 = 0`:
 
 ```fortran
 do k = 1, max_iter
@@ -73,23 +63,16 @@ end do
 Convergencia en 6 iteraciones.
 ```
 
-En la columna del error, el número de cifras correctas se duplica en cada iteración.
+El número de cifras correctas se duplica en cada iteración.
 
-Detalles de sintaxis:
-
-- `do k = 1, n` incluye el valor `n`. `exit` abandona el bucle y `cycle` pasa a la siguiente vuelta.
-- La desigualdad se escribe `/=`, porque `!` inicia un comentario. La potencia es `x**2`.
-- `parameter` declara una constante, y el compilador impide modificarla.
-- En los formatos, `i5` es un entero en 5 columnas, `f22.16` un real con 16 decimales, `es10.2` un
-  número en notación científica y `a` un texto. Dan control completo sobre el formato de los archivos
-  de datos.
+Sintaxis: `do k = 1, n` incluye `n`; `exit` abandona el bucle. La desigualdad es `/=`, porque `!` inicia
+un comentario, y la potencia es `x**2`. `parameter` declara una constante. En los formatos, `i5` es un
+entero en 5 columnas, `f22.16` un real con 16 decimales, `es10.2` notación científica y `a` texto.
 
 ## Ejercicios
 
-1. Cambia `double precision` por `real` en `heron.f90` y elimina los `d0`. Cuenta las cifras correctas
-   que se obtienen y explica qué ocurre con la tolerancia `1.0d-15`.
-2. Calcula la raíz cúbica. El método de Newton para `x³ − a = 0` da
-   `x_{k+1} = (2 x_k + a / x_k²) / 3`.
-3. Suma `1 + 1/2² + 1/3² + ...` hasta `n = 1000000` y compara con `π²/6`. Hay dos trampas: `1/i**2`
-   es una división entera, y `i**2` desborda un entero de 32 bits cuando `i` es grande. Para `π`,
-   usa `acos(-1.0d0)`.
+1. En `heron.f90`, cambia `double precision` por `real` y quita los `d0`. Cuenta las cifras correctas
+   y explica qué ocurre con la tolerancia `1.0d-15`.
+2. Calcula la raíz cúbica: Newton para `x³ − a = 0` da `x_{k+1} = (2 x_k + a / x_k²) / 3`.
+3. Suma `1 + 1/2² + 1/3² + ...` hasta `n = 1000000` y compara con `π²/6` (`acos(-1.0d0)` da `π`). Hay
+   dos trampas: `1/i**2` es una división entera, e `i**2` desborda 32 bits cuando `i` es grande.

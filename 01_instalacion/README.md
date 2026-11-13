@@ -1,102 +1,69 @@
 # Unidad 01 · Instalación
 
-El curso necesita cuatro componentes:
-
-- **gfortran**, el compilador de Fortran.
-- **make**, que compila los proyectos de la segunda sesión.
-- **Python 3** con **numpy** y **matplotlib**, para dibujar los resultados.
-- **VS Code**, con las extensiones *Modern Fortran*, *Python* y *Makefile Tools*.
-
-La instalación completa requiere unos veinte minutos y debe hacerse antes de la primera sesión.
+Hacen falta cuatro componentes: **gfortran**, **make**, **Python 3** con **numpy** y **matplotlib**, y
+**VS Code** con las extensiones *Modern Fortran*, *Python* y *Makefile Tools*. La instalación requiere
+unos veinte minutos.
 
 ## Windows
 
-En Windows, gfortran y make se instalan con MSYS2.
+1. **MSYS2.** Descarga el instalador de <https://www.msys2.org> y ejecútalo con la ruta que propone,
+   `C:\msys64`.
+2. **gfortran y make.** Abre **MSYS2 UCRT64** desde el menú Inicio y escribe:
 
-**1. MSYS2.** Descarga el instalador de <https://www.msys2.org> y ejecútalo con la ruta que propone,
-`C:\msys64`.
+   ```bash
+   pacman -Syu
+   ```
 
-**2. gfortran y make.** Abre **MSYS2 UCRT64** desde el menú Inicio (la ventana negra que muestra
-`UCRT64` en el prompt) y escribe:
+   Si pide cerrar la ventana, ciérrala, ábrela y repite hasta que no quede nada por actualizar.
+   Después:
 
-```bash
-pacman -Syu
-```
+   ```bash
+   pacman -S mingw-w64-ucrt-x86_64-gcc-fortran make
+   ```
 
-Si pide cerrar la ventana, ciérrala, ábrela de nuevo y repite la orden hasta que no quede nada por
-actualizar. Después escribe:
+3. **Variable Path.** Pulsa la tecla Windows, escribe *variables de entorno* y abre *Editar las
+   variables de entorno de esta cuenta*. En `Path`, añade estas dos entradas, en este orden:
 
-```bash
-pacman -S mingw-w64-ucrt-x86_64-gcc-fortran make
-```
+   ```
+   C:\msys64\ucrt64\bin
+   C:\msys64\usr\bin
+   ```
 
-**3. Variable Path.** Para que `gfortran` y `make` funcionen en PowerShell y en VS Code hay que
-añadir dos carpetas al `Path`. Pulsa la tecla Windows, escribe *variables de entorno* y abre
-*Editar las variables de entorno de esta cuenta*. Selecciona `Path`, pulsa *Editar* y añade estas dos
-entradas, en este orden:
+   La primera contiene gfortran. La segunda, make y las órdenes `rm` y `mkdir` que usan los Makefile.
+4. **Python.** Descárgalo de <https://www.python.org> y marca **Add python.exe to PATH** en la primera
+   pantalla del instalador.
+5. **numpy y matplotlib.** En una PowerShell nueva:
 
-```
-C:\msys64\ucrt64\bin
-C:\msys64\usr\bin
-```
+   ```powershell
+   pip install numpy
+   pip install matplotlib
+   pip install fortls
+   ```
 
-La primera contiene gfortran. La segunda contiene make y las órdenes `rm` y `mkdir`, que usan los
-Makefile del curso.
-
-**4. Python.** Descárgalo de <https://www.python.org>. En la primera pantalla del instalador, marca
-la casilla **Add python.exe to PATH**. Sin ella, la orden `python` no funciona en la terminal.
-
-**5. numpy y matplotlib.** Abre una PowerShell nueva, para que lea el `Path` actualizado, y escribe
-una orden detrás de otra:
-
-```powershell
-pip install numpy
-pip install matplotlib
-pip install fortls
-```
-
-`numpy` lee los datos y `matplotlib` los dibuja. `fortls` proporciona el autocompletado de Fortran en
-VS Code.
-
-**6. VS Code.** Descárgalo de <https://code.visualstudio.com> y abre la carpeta del curso con
-*Archivo → Abrir carpeta*. VS Code propone instalar las extensiones recomendadas; acepta la
-propuesta. Si no aparece, pulsa `Ctrl+Mayús+X`, busca cada extensión por su nombre e instálala:
-
-| Extensión | Función |
-|---|---|
-| Modern Fortran | Colores, errores mientras se escribe y autocompletado |
-| Python | Lo mismo para los scripts de las figuras |
-| Makefile Tools | Colores y ayuda para los Makefile |
+   `fortls` da el autocompletado de Fortran en VS Code.
+6. **VS Code.** Descárgalo de <https://code.visualstudio.com>, abre la carpeta del curso y acepta
+   instalar las extensiones recomendadas. Si no aparece la propuesta, busca cada extensión con
+   `Ctrl+Mayús+X`.
 
 ## Linux y macOS
 
 **Ubuntu y Debian:**
 
 ```bash
-sudo apt install gfortran make python3 python3-numpy python3-matplotlib python3-pip
+sudo apt install gfortran make python3 python3-numpy python3-matplotlib python3-pip python-is-python3
 pip install fortls
 ```
 
-En estas distribuciones el intérprete se llama `python3`. El paquete `python-is-python3` añade el
-nombre `python`, que usan las órdenes del curso. En las versiones recientes, `pip install numpy`
-exige un entorno virtual (`python3 -m venv`), y por eso aquí numpy y matplotlib se instalan con
-`apt`.
+(En las versiones recientes, `pip install numpy` exige un entorno virtual, y por eso se usa `apt`.)
 
 **Fedora:** `sudo dnf install gcc-gfortran make python3-numpy python3-matplotlib`.
 
-**macOS**, con [Homebrew](https://brew.sh):
-
-```bash
-brew install gcc make python
-pip3 install numpy matplotlib fortls
-```
-
-En macOS el intérprete también es `python3`. Las extensiones de VS Code son las mismas que en
-Windows.
+**macOS**, con [Homebrew](https://brew.sh): `brew install gcc make python` y
+`pip3 install numpy matplotlib fortls`. Allí el intérprete se llama `python3`.
 
 ## Comprobación
 
-Cierra las terminales abiertas, abre una nueva en esta carpeta y escribe:
+Abre una terminal nueva en esta carpeta:
 
 ```bash
 gfortran comprobacion.f90 -o comprobacion
@@ -117,14 +84,11 @@ Si falta algún componente, el programa indica cuál.
 
 ## Errores frecuentes
 
-- **`gfortran` no se reconoce.** El `Path` no está bien configurado, o la terminal (o VS Code)
-  estaba abierta antes del cambio y hay que cerrarla y abrirla de nuevo.
-- **`make` no funciona en PowerShell.** La terminal MSYS2 UCRT64 del menú Inicio lo ejecuta sin
-  depender del `Path`. Los archivos de Windows están en `/c/...`.
-- **`python` abre la Microsoft Store.** No se marcó *Add python.exe to PATH*. Desinstala Python e
-  instálalo otra vez con la casilla marcada.
-- **El antivirus borra el `.exe` recién compilado.** Es un falso positivo habitual con ejecutables
-  sin firma. Añade la carpeta del curso a las exclusiones.
-- **PowerShell no ejecuta `hola`.** Hay que escribir `.\hola`, con el punto y la barra.
-- **`Permission denied` al compilar.** El programa anterior sigue en ejecución. Ciérralo y compila de
-  nuevo.
+- **`gfortran` no se reconoce.** El `Path` no está bien, o la terminal estaba abierta antes del
+  cambio y hay que reabrirla.
+- **`make` no funciona en PowerShell.** La terminal MSYS2 UCRT64 lo ejecuta sin depender del `Path`
+  (los archivos de Windows están en `/c/...`).
+- **`python` abre la Microsoft Store.** No se marcó *Add python.exe to PATH*. Reinstala Python con la
+  casilla marcada.
+- **El antivirus borra el `.exe`.** Es un falso positivo habitual. Excluye la carpeta del curso.
+- **PowerShell no ejecuta `hola`.** Hay que escribir `.\hola`.

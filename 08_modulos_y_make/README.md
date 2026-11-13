@@ -1,19 +1,16 @@
 # Unidad 08 · Módulos y make
 
-El programa es el mismo Euler de la unidad anterior y da el mismo resultado, pero el código se reparte
-en tres archivos. Cuando un programa crece, dividirlo es la única forma de mantenerlo comprensible.
+El mismo Euler de la unidad anterior, con el mismo resultado, repartido en tres archivos:
 
 ```
 08_modulos_y_make/
-├── modelo.f90       el modelo: el campo vectorial
-├── integrador.f90   el método: Euler explícito
-├── principal.f90    el programa: lee, integra y escribe
+├── modelo.f90       el campo vectorial
+├── integrador.f90   Euler explícito
+├── principal.f90    lee, integra y escribe
 ├── entrada.nml
 ├── Makefile
 └── graficar.py
 ```
-
-Para probarlo:
 
 ```bash
 make run
@@ -22,7 +19,7 @@ python graficar.py
 
 ## Módulos
 
-Un módulo es un archivo que agrupa procedimientos para que los usen otros archivos. Este es el modelo:
+Un módulo agrupa procedimientos para que los usen otros archivos:
 
 ```fortran
 module modelo
@@ -39,22 +36,17 @@ contains
 end module modelo
 ```
 
-`private` y `public` deciden qué ve el resto del programa. Quien necesita el módulo escribe
-`use modelo, only: campo`, y el `only` deja claro de dónde procede cada nombre.
-
-El método está en otro módulo, que usa el del modelo, y el programa principal usa el del método:
+Quien lo necesita escribe `use modelo, only: campo`. El integrador usa el modelo, y el programa
+principal usa el integrador:
 
 ```
 modelo.f90  →  integrador.f90  →  principal.f90
 ```
 
-Cada flecha es un `use`. Cambiar de modelo solo exige modificar `modelo.f90`.
+## Compilar a mano
 
-## Compilación manual
-
-Al compilar un módulo, gfortran genera dos archivos: un `.o` con el código y un `.mod` con la
-descripción de su contenido. Quien usa el módulo necesita su `.mod`, y por eso la compilación sigue un
-orden:
+Al compilar un módulo, gfortran genera un `.o` con el código y un `.mod` con la descripción de su
+contenido. Quien usa el módulo necesita su `.mod`, así que se compila en orden:
 
 ```bash
 gfortran -c modelo.f90          # genera modelo.o y modelo.mod
@@ -63,20 +55,10 @@ gfortran -c principal.f90       # necesita integrador.mod
 gfortran modelo.o integrador.o principal.o -o euler
 ```
 
-Las tres primeras órdenes compilan, y la última enlaza todo en un ejecutable. Con cinco módulos,
-escribir estas órdenes en cada cambio es poco práctico, y para eso existe `make`.
-
 ## El Makefile
 
-`make` lee el archivo `Makefile`, donde se declara de qué depende cada archivo y cómo se construye, y
-recompila solo lo que ha cambiado. Una regla tiene esta forma:
-
-```make
-objetivo: dependencias
-	orden para construirlo
-```
-
-La sangría de la orden debe ser un tabulador, no espacios. Este Makefile contiene cuatro elementos:
+`make` lee las dependencias de cada archivo y recompila solo lo que ha cambiado. Una regla es
+`objetivo: dependencias` seguida de la orden, con sangría de tabulador:
 
 ```make
 euler: modelo.o integrador.o principal.o                    # enlazar
@@ -89,36 +71,32 @@ integrador.o: modelo.o                                      # dependencias entre
 principal.o: integrador.o
 ```
 
-La segunda regla vale para cualquier `.f90`: `%` es un comodín y `$<` es el archivo de partida. Las
-dos últimas líneas no llevan orden. Solo declaran que `integrador.o` no puede construirse antes que
-`modelo.o`.
-
-La siguiente secuencia muestra qué recompila `make` en cada caso:
+La segunda regla vale para cualquier `.f90` (`%` es un comodín y `$<`, el archivo de partida). Las dos
+últimas líneas no llevan orden: solo indican que `integrador.o` necesita `modelo.o`. Para ver qué
+recompila:
 
 ```bash
 make                  # la primera vez compila todo
 make                  # no hay nada que hacer
-touch principal.f90   # simula una edición de principal.f90
+touch principal.f90   # simula una edición
 make                  # recompila solo principal.f90
 touch modelo.f90
-make                  # recompila todo, porque todo depende del modelo
+make                  # recompila todo
 ```
 
-`make clean` borra los archivos generados.
+`make clean` borra lo generado.
 
 ## Opciones de compilación
 
-El Makefile define la variable `FFLAGS = -O2` con las opciones que se pasan a gfortran. `-O2` activa
-las optimizaciones y es la opción normal. Para localizar errores existe otra forma de compilar:
+`FFLAGS = -O2` activa las optimizaciones. Para localizar errores:
 
 ```bash
 make clean
 make FFLAGS="-g -fcheck=all"
 ```
 
-Con `-fcheck=all` el programa comprueba cada acceso a un array y avisa si el índice sale del rango.
-Es más lento, pero detecta errores que de otro modo pasan desapercibidos. `error_indice.f90` recorre
-una matriz de 5 filas hasta la fila 6:
+`-fcheck=all` comprueba los índices de los arrays y avisa al salirse del rango. `error_indice.f90`
+recorre una matriz de 5 filas hasta la fila 6:
 
 ```bash
 gfortran -O2 error_indice.f90 -o error_indice
@@ -136,20 +114,16 @@ At line 24 of file error_indice.f90
 Fortran runtime error: Index '6' of dimension 1 of array 'm' above upper bound of 5
 ```
 
-Sin comprobaciones, el programa da 115 sin avisar. La matriz se guarda por columnas, y tras `m(5,1)` la
-memoria contiene `m(1,2)`, que vale 100. Con `-fcheck=all`, el programa se detiene e indica archivo,
-línea, índice y límite.
-
-Para desarrollar conviene compilar con `-g -fcheck=all`. Cuando el código funciona y se necesita
-velocidad, se pasa a `-O2`.
+Sin comprobaciones el programa da 115 sin avisar: la matriz se guarda por columnas y tras `m(5,1)`
+viene `m(1,2)`, que vale 100. Conviene desarrollar con `-g -fcheck=all` y pasar a `-O2` cuando el
+código funciona.
 
 ## Ejercicios
 
-1. Compila con `make FFLAGS="-g -fcheck=all"` y ejecuta con `t_final = 3000`. Mide cuánto más lento
-   resulta que con `-O2`.
-2. Cambia el modelo por el oscilador de Duffing, `y' = -mu (x² - 1) y - x - x³`. Cuenta los archivos
-   que has tenido que modificar.
-3. Añade un módulo nuevo, `escritura.f90`, con una subrutina que escriba la solución en un archivo.
-   Llámala desde `principal.f90` y actualiza el Makefile.
-4. Elimina del Makefile la línea `integrador.o: modelo.o`, borra los `.o` con `make clean` y ejecuta
-   `make`. Lee el error.
+1. Compila con `-g -fcheck=all`, ejecuta con `t_final = 3000` y mide cuánto más lento va que con
+   `-O2`.
+2. Cambia el modelo por el de Duffing, `y' = -mu (x² - 1) y - x - x³`, y cuenta los archivos
+   modificados.
+3. Añade un módulo `escritura.f90` con una subrutina que escriba la solución, llámala desde
+   `principal.f90` y actualiza el Makefile.
+4. Quita del Makefile la línea `integrador.o: modelo.o`, haz `make clean` y `make`, y lee el error.
