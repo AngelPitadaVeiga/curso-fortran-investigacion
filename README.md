@@ -2,10 +2,9 @@
 
 Ángel Pita da Veiga Ramonde · Universidade de Santiago de Compostela (USC) y CITMAGA
 
-Curso de dos sesiones de dos horas para personas que programan en Julia, C++ o Matlab y no han
-escrito nunca Fortran. Empieza con un programa de una línea y termina con un código de elementos
+Curso de dos sesiones de un curso básico de introducción a FORTRAN enfocado a la investigación en Matemáticas. Empieza con un programa de una línea y termina con un código de elementos
 finitos en 2D que calcula la deformación y las vibraciones de una viga. Entre ambos extremos se integra
-el oscilador de Van der Pol con Euler, con Runge–Kutta y con métodos implícitos.
+el oscilador de Van der Pol con Euler, con Runge–Kutta y con métodos implícitos; que se usan como excusa para explicar las funcionalidades de FORTRAN.
 
 ![Benchmark](00_propaganda/figuras/benchmark_i7-14700.png)
 
