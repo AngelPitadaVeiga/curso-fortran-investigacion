@@ -1,6 +1,7 @@
 # Curso introductorio de Fortran orientado a la investigación
 
-Ángel Pita da Veiga Ramonde · Universidade de Santiago de Compostela (USC) y CITMAGA
+Ángel Pita da Veiga Ramonde [angel.pitadaveiga@usc.es]
+Universidade de Santiago de Compostela (USC) y CITMAGA
 
 Curso de dos sesiones de un curso básico de introducción a FORTRAN enfocado a la investigación en Matemáticas. Empieza con un programa de una línea y termina con un código de elementos
 finitos en 2D que calcula la deformación y las vibraciones de una viga. Entre ambos extremos se integra
