@@ -29,6 +29,7 @@ veinte minutos.
 - [10 · Retrato de fases](10_retrato_de_fases/): estudio de la dinámica con el integrador.
 - [11 · Elementos finitos](11_elementos_finitos/): una viga en 2D.
 - [Ejercicios](EJERCICIOS.md).
+- [Formatos de `print` y `write`](FORMATOS.md).
 
 ## Compilar y ejecutar
 
