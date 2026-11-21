@@ -28,6 +28,59 @@ python graficar.py
 
 El método se elige con `metodo` en `entrada.nml`, sin recompilar.
 
+## Métodos de Runge–Kutta
+
+Como en la unidad 05, un paso consiste en aproximar
+
+```
+u(t_{k+1}) = u(t_k) + ∫_{t_k}^{t_{k+1}} F(u(t)) dt
+```
+
+Euler toma la pendiente en un solo punto, el inicio del paso. Un método de Runge–Kutta evalúa `F` en
+varios puntos dentro del paso (las **etapas** `k1, k2, ...`), cada uno calculado con las etapas
+anteriores, y avanza con una media ponderada de todas ellas:
+
+```
+k1 = F(u_k)
+k2 = F(u_k + h a21 k1)
+k3 = F(u_k + h (a31 k1 + a32 k2))
+...
+u_{k+1} = u_k + h (b1 k1 + b2 k2 + ... + bs ks)
+```
+
+Los coeficientes `a` y `b` se eligen para que el desarrollo de Taylor de `u_{k+1}` coincida con el de
+la solución exacta hasta la potencia más alta posible de `h`. Si coincide hasta `h^p`, el método es de
+**orden** `p`: el error en `t` fijo es proporcional a `h^p`. Cada etapa cuesta una evaluación de `F`.
+
+- **Heun** (dos etapas, orden 2). Da un paso de Euler para estimar el final del intervalo y promedia
+  la pendiente del inicio y la del final, que es la regla del trapecio aplicada a la integral:
+
+  ```
+  k1 = F(u_k)
+  k2 = F(u_k + h k1)
+  u_{k+1} = u_k + h (k1 + k2) / 2
+  ```
+
+- **RK4** (cuatro etapas, orden 4). Evalúa la pendiente al principio, dos veces en el punto medio y al
+  final, y las pondera con `1, 2, 2, 1` como la regla de Simpson:
+
+  ```
+  k1 = F(u_k)
+  k2 = F(u_k + h/2 k1)
+  k3 = F(u_k + h/2 k2)
+  k4 = F(u_k + h k3)
+  u_{k+1} = u_k + h (k1 + 2 k2 + 2 k3 + k4) / 6
+  ```
+
+Los dos implícitos de la unidad son de la misma familia, pero con una etapa que depende de `u_{k+1}`:
+
+```
+u_{k+1} = u_k + h (theta F(u_{k+1}) + (1 - theta) F(u_k))
+```
+
+Con `theta = 1` es Euler implícito (orden 1), y con `theta = 1/2`, el trapecio (orden 2). Como en la
+unidad 05, en cada paso se resuelve un sistema no lineal con Newton.
+
 ## Código
 
 Cada método es una función que recibe `u_k` y devuelve `u_{k+1}`. RK4:
