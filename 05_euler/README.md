@@ -9,10 +9,50 @@ y' = -mu (x² - 1) y - x
 
 que tiene un ciclo límite estable: una órbita cerrada hacia la que convergen las órbitas próximas.
 
-| | Fórmula | Cálculo en cada paso |
-|---|---|---|
-| Euler explícito | `u_{k+1} = u_k + h F(u_k)` | una operación directa |
-| Euler implícito | `u_{k+1} = u_k + h F(u_{k+1})` | un sistema no lineal, resuelto con Newton |
+## Los dos métodos
+
+Con `u = (x, y)`, el sistema es `u' = F(u)`, con `F(x, y) = (y, -mu (x² - 1) y - x)`. Se toman pasos
+de tamaño `h`, `t_k = k h`, y `u_k` es la aproximación de `u(t_k)`. Integrando la ecuación entre
+`t_k` y `t_{k+1}`,
+
+```
+u(t_{k+1}) = u(t_k) + ∫_{t_k}^{t_{k+1}} F(u(t)) dt
+```
+
+y la integral se aproxima por `h` veces el valor de `F` en uno de los dos extremos del intervalo.
+
+**Euler explícito.** Con el extremo izquierdo:
+
+```
+u_{k+1} = u_k + h F(u_k)
+```
+
+que, para Van der Pol, es
+
+```
+x_{k+1} = x_k + h y_k
+y_{k+1} = y_k + h (-mu (x_k² - 1) y_k - x_k)
+```
+
+El lado derecho solo depende del paso anterior, y `u_{k+1}` se calcula directamente.
+
+**Euler implícito.** Con el extremo derecho:
+
+```
+u_{k+1} = u_k + h F(u_{k+1})
+```
+
+que, para Van der Pol, es
+
+```
+x_{k+1} = x_k + h y_{k+1}
+y_{k+1} = y_k + h (-mu (x_{k+1}² - 1) y_{k+1} - x_{k+1})
+```
+
+Ahora la incógnita aparece a los dos lados: en cada paso hay que resolver un sistema no lineal de dos
+ecuaciones con dos incógnitas, `x_{k+1}` e `y_{k+1}`. Se hace con el método de Newton (ver más abajo).
+
+## Los programas
 
 Los programas integran hasta `t = 3000` (unos 450 periodos) con `h = 0.01` y escriben un punto cada
 0.1 de tiempo (uno por paso, si `h` es mayor). El tiempo es largo a propósito: la unidad 06 muestra
