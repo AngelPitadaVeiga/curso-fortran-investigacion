@@ -15,6 +15,16 @@ ifeq ($(OS),Windows_NT)
     EXE = .exe
 endif
 
+# rm y mkdir -p existen en Linux, macOS y MSYS2, pero no en la terminal de Windows (cmd), que es
+# la que usa make si no encuentra otra. Se distingue porque cmd escribe las comillas de echo.
+ifeq ($(shell echo "x"),"x")
+    CREAR_RESULTADOS = if not exist resultados mkdir resultados
+    BORRAR = del /q *.o *.mod solido$(EXE) orden_espacial$(EXE) 2>nul & if exist resultados rmdir /s /q resultados
+else
+    CREAR_RESULTADOS = mkdir -p resultados
+    BORRAR = rm -rf *.o *.mod solido$(EXE) orden_espacial$(EXE) resultados
+endif
+
 all: solido$(EXE) orden_espacial$(EXE)
 
 solido$(EXE): malla.o elasticidad.o algebra.o dinamica.o solido.o
@@ -31,7 +41,7 @@ solido.o: malla.o elasticidad.o algebra.o dinamica.o
 orden_espacial.o: malla.o elasticidad.o algebra.o
 
 resultados:
-	mkdir -p resultados
+	$(CREAR_RESULTADOS)
 
 run: solido$(EXE) | resultados
 	./solido estatico.nml
@@ -49,4 +59,4 @@ run-orden: orden_espacial$(EXE)
 	./orden_espacial
 
 clean:
-	rm -rf *.o *.mod solido orden_espacial solido.exe orden_espacial.exe resultados
+	$(BORRAR)
