@@ -164,13 +164,12 @@ los puntos de equilibrio estables e inestables.
 
 El [README de la unidad](11_elementos_finitos/README.md) tiene cuatro ejercicios más.
 
-**31. Tiempo de cálculo.** Mide con `time make run` (o con un cronómetro) cuánto tarda el caso
-estático con mallas de 20 × 2, 40 × 4 y 80 × 8. ¿Por cuánto se multiplica el tiempo cada vez que se
-duplica la malla?
+**31. Tiempo de cálculo.** Genera la ménsula con triángulos de lado 0.3, 0.2 y 0.15
+(`python generar_malla.py mensula 0.2`) y mide cuánto tarda `make run` con cada una. ¿Por cuánto se
+multiplica el tiempo cuando se duplica el número de nodos?
 
-**32. Periodo de vibración.** En la figura de `graficar_vibracion.py`, mide el periodo de la flecha
-del extremo y compáralo con el de la teoría de vigas que imprime el programa. Repite con la malla de
-40 × 4.
+**32. Periodo de vibración.** En la figura de `graficar_vibracion.py`, mide el periodo de la flecha y
+comprueba si cambia al refinar la malla.
 
 **33. Más carga.** Multiplica `carga` por 10 en `estatico.nml`. Comprueba que la flecha y la tensión
 de von Mises también se multiplican por 10, como corresponde a un problema lineal.
@@ -190,10 +189,19 @@ Añade las curvas de nivel de la densidad exacta con `contour`.
 **36. Vorticidad.** Calcula la vorticidad `v_x - u_y` con `np.gradient` y dibújala. Compara su
 máximo con el exacto, `beta e^(1/2) / π`, en los dos esquemas.
 
-**37. Una película.** Modifica `fluido.f90` para que escriba el campo cada cierto tiempo
-(`dt_escritura` en el namelist, con un archivo distinto para cada instante). Dibuja los instantes con
-Python, guarda una imagen de cada uno y comprueba que el vórtice recorre la diagonal del cuadrado.
+**37. Película del vórtice.** Añade `dt_escritura = 0.1` a `vortice.nml`, ejecuta `make run` y
+haz la película con `python pelicula.py muscl`. Comprueba que el vórtice recorre la diagonal del
+cuadrado y vuelve a su sitio en `t = 10`. Haz lo mismo con el esquema de primer orden.
 
 **38. Error frente al tiempo.** La tercera columna de `resultados/*_historia.dat` es el error de la
 densidad. Dibújala frente al tiempo para los dos esquemas, en escala logarítmica en el eje vertical, y
 compara con la densidad mínima de `graficar_comparacion.py`.
+
+**39. Kelvin–Helmholtz.** Pon `n = 100` en `kelvin_helmholtz.nml`, ejecuta `make run-kh` y haz las
+películas de la densidad y de la vorticidad (`python pelicula.py kh vorticidad`). Repite con `n = 200`
+y compara: ¿qué detalles aparecen al refinar la malla?
+
+**40. Crecimiento de la inestabilidad.** La cuarta columna de `resultados/kh_historia.dat` es la
+energía cinética del movimiento vertical. Dibújala frente al tiempo en escala logarítmica. Al
+principio crece como una exponencial: mide su ritmo de crecimiento con la pendiente, y localiza el
+instante en que deja de crecer.

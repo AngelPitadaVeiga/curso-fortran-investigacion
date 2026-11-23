@@ -1,0 +1,12 @@
+! Inestabilidad de Kelvin-Helmholtz: dos capas de gas que se deslizan una sobre otra.
+! Guarda una instantánea cada 0.25 para hacer la película con pelicula.py.
+! Con n = 400 tarda varios minutos; para probar, n = 200.
+&parametros
+    caso    = 'kelvin_helmholtz'
+    n       = 400
+    t_final = 30.0
+    cfl     = 0.5
+    esquema = 'muscl'
+    nombre  = 'kh'
+    dt_escritura = 0.25
+/

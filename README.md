@@ -4,8 +4,8 @@
 Universidade de Santiago de Compostela (USC) y CITMAGA
 
 Curso de dos sesiones de un curso básico de introducción a FORTRAN enfocado a la investigación en Matemáticas. Empieza con un programa de una línea y termina con dos códigos en 2D: uno de
-elementos finitos, que calcula la deformación y las vibraciones de una viga, y otro de volúmenes
-finitos, que sigue un vórtice en un gas. Entre ambos extremos se integra
+elementos finitos, que calcula la deformación y las vibraciones de una pieza con agujeros, y otro de volúmenes
+finitos, que sigue vórtices en un gas. Entre ambos extremos se integra
 el oscilador de Van der Pol con Euler, con Runge–Kutta y con métodos implícitos; que se usan como excusa para explicar las funcionalidades de FORTRAN.
 
 ![Benchmark](00_propaganda/figuras/benchmark_i7-14700.png)
@@ -17,19 +17,19 @@ veinte minutos.
 
 ## Unidades
 
-- [00 · Propaganda](00_propaganda/): razones para usar Fortran, y cuándo no.
-- [01 · Instalación](01_instalacion/): compilador, make, Python y VS Code.
-- [02 · Hola, mundo](02_hola_mundo/): el primer programa y VS Code.
-- [03 · Variables y bucles](03_variables_y_bucles/): tipos, precisión y formatos.
-- [04 · Arrays y archivos](04_arrays_y_archivos/): vectores, matrices dinámicas y ficheros.
-- [05 · Euler](05_euler/): Van der Pol con Euler explícito e implícito.
-- [06 · Visualización](06_visualizacion/): figuras con Python y la deriva de fase de Euler.
-- [07 · Entrada de datos](07_entrada_de_datos/): parámetros leídos de un archivo.
-- [08 · Módulos y make](08_modulos_y_make/): código en varios archivos y Makefile.
-- [09 · Runge–Kutta](09_runge_kutta/): más métodos, orden de convergencia y rigidez.
-- [10 · Retrato de fases](10_retrato_de_fases/): estudio de la dinámica con el integrador.
-- [11 · Elementos finitos](11_elementos_finitos/): una viga en 2D.
-- [12 · Volúmenes finitos](12_volumenes_finitos/): un vórtice en un gas, en 2D.
+- [00. Propaganda](00_propaganda/): razones para usar Fortran, y cuándo no.
+- [01. Instalación](01_instalacion/): compilador, make, Python y VS Code.
+- [02. Hola, mundo](02_hola_mundo/): el primer programa y VS Code.
+- [03. Variables y bucles](03_variables_y_bucles/): tipos, precisión y formatos.
+- [04. Arrays y archivos](04_arrays_y_archivos/): vectores, matrices dinámicas y ficheros.
+- [05. Euler](05_euler/): Van der Pol con Euler explícito e implícito.
+- [06. Visualización](06_visualizacion/): figuras con Python y la deriva de fase de Euler.
+- [07. Entrada de datos](07_entrada_de_datos/): parámetros leídos de un archivo.
+- [08. Módulos y make](08_modulos_y_make/): código en varios archivos y Makefile.
+- [09. Runge–Kutta](09_runge_kutta/): más métodos, orden de convergencia y rigidez.
+- [10. Retrato de fases](10_retrato_de_fases/): estudio de la dinámica con el integrador.
+- [11. Elementos finitos](11_elementos_finitos/): deformación y vibraciones de una pieza con agujeros.
+- [12. Volúmenes finitos](12_volumenes_finitos/): vórtices en un gas, en 2D.
 - [Ejercicios](EJERCICIOS.md).
 - [Formatos de `print` y `write`](FORMATOS.md).
 

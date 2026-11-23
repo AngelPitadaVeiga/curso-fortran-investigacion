@@ -1,8 +1,12 @@
-# Unidad 12 · Volúmenes finitos
+# Unidad 12. Volúmenes finitos
 
-Un segundo código largo, ahora de fluidos: un **vórtice** arrastrado por un gas, en 2D. Tiene la
-misma estructura que el de la unidad 11 (módulos, Makefile, archivos de entrada, programa de orden de
-convergencia y figuras en Python), y el avance en el tiempo es el método de Heun de la unidad 09.
+Un segundo código largo, ahora de fluidos: un gas en 2D con vórtices. Tiene la misma estructura
+que el de la unidad 11 (módulos, Makefile, archivos de entrada, programa de orden de convergencia y
+figuras en Python), y el avance en el tiempo es el método de Heun de la unidad 09.
+
+Hay dos casos. El primero, un vórtice que la corriente arrastra sin deformarlo, tiene solución exacta
+y sirve para comprobar el código. El segundo, la inestabilidad de Kelvin–Helmholtz, no la tiene, y se
+ve en una película al final.
 
 ```bash
 make run
@@ -10,11 +14,11 @@ python graficar.py
 ```
 
 ```
-Esquema: muscl   celdas: 100 x 100
+Caso: vortice   esquema: muscl   celdas: 100 x 100
 Pasos: 1057   t final = 10.00
 Densidad minima:  0.5622   exacta:  0.4938
 Error de la densidad (norma L1): 5.187E-03
-Resultados en resultados/muscl_*.dat
+Resultados en resultados/muscl_*
 ```
 
 ![Vórtice con el esquema de orden 2](figuras/muscl_campo.png)
@@ -72,7 +76,7 @@ Los estados de la cara se obtienen de dos formas (parámetro `esquema`):
   signo), que evita oscilaciones. Es de orden 2.
 
 El paso de tiempo se elige en cada paso para que la información no recorra más de una fracción `cfl`
-de celda: `dt = cfl · dx / max(s_x + s_y)`. Es la misma restricción de estabilidad que en el método
+de celda: `dt = cfl * dx / max(s_x + s_y)`. Es la misma restricción de estabilidad que en el método
 explícito de la unidad 11.
 
 ## Archivos
@@ -81,14 +85,14 @@ explícito de la unidad 11.
 12_volumenes_finitos/
 ├── gas.f90             variables, flujo y velocidad de las ondas del gas
 ├── volumenes.f90       celdas fantasma, flujo en las caras y paso de tiempo
-├── vortice.f90         la solución exacta
+├── casos.f90           los dos estados iniciales (el vórtice, con su solución exacta)
 ├── fluido.f90          programa principal
 ├── orden_espacial.f90  programa que mide el orden de convergencia
-├── vortice.nml, vortice_primer_orden.nml, Makefile
-└── graficar.py, graficar_comparacion.py, graficar_orden.py
+├── vortice.nml, vortice_primer_orden.nml, kelvin_helmholtz.nml, Makefile
+└── graficar.py, graficar_comparacion.py, graficar_orden.py, pelicula.py
 ```
 
-`volumenes` y `vortice` usan `gas`; los dos programas usan los tres módulos. Elementos de Fortran
+`volumenes` y `casos` usan `gas`; los dos programas usan los tres módulos. Elementos de Fortran
 que aparecen:
 
 - `q(4, -1:n+2, -1:n+2)`: un array que empieza en `-1`. Las celdas `-1, 0` y `n+1, n+2` son
@@ -100,6 +104,11 @@ que aparecen:
   cuyo tamaño depende de los argumentos y que desaparece al salir de la subrutina.
 - `elemental function minmod(a, b)`: una función escrita para escalares que se puede llamar con
   arrays, componente a componente, como `sin`.
+- `write(archivo, '(a, a, a, i4.4, a)') ...`: el nombre de cada instantánea se compone escribiendo
+  en una variable de texto; `i4.4` rellena con ceros (`kh_0007.bin`). Ver [FORMATOS.md](../FORMATOS.md).
+- `open(..., access='stream', form='unformatted')`: un archivo **binario**, con los números tal como
+  están en memoria. Ocupa menos que el texto, se escribe más deprisa y Python lo lee con
+  `np.fromfile`.
 
 ## Resultados
 
@@ -145,6 +154,33 @@ Se integra hasta `t = 1`. Los órdenes se acercan a 1 y a 2 al refinar, pero des
 gruesas el error es comparable al propio vórtice, y el comportamiento asintótico solo aparece con
 celdas mucho menores que su radio.
 
+## Inestabilidad de Kelvin–Helmholtz
+
+Una franja de gas denso (`rho = 2`) se mueve hacia la derecha entre dos capas de gas ligero
+(`rho = 1`) que se mueven hacia la izquierda. Las superficies de separación son inestables: una
+perturbación pequeña de la velocidad vertical crece, y cada superficie se enrolla en una fila de
+vórtices. Es lo que forma las olas cuando sopla el viento sobre el mar, o las nubes con forma de ola.
+La perturbación inicial tiene cuatro ondas y otra más larga, de modo que los cuatro vórtices de cada
+superficie acaban uniéndose de dos en dos.
+
+No hay solución exacta. Lo que se puede comprobar es que el resultado no cambia al refinar la malla:
+con más celdas aparecen detalles más finos, pero los vórtices grandes son los mismos.
+
+```bash
+make run-kh                   # 400 x 400 celdas: unos doce minutos
+python pelicula.py kh
+python pelicula.py kh vorticidad
+```
+
+Con `dt_escritura > 0`, `fluido` guarda la densidad y la vorticidad cada `dt_escritura` en archivos
+binarios (`resultados/kh_0000.bin`, `kh_0001.bin`, ...), y `pelicula.py` los convierte en un GIF
+animado con `matplotlib.animation`. Si está instalado [ffmpeg](https://ffmpeg.org), escribe también
+un `.mp4`.
+
+![Kelvin–Helmholtz: densidad](figuras/kh_densidad.gif)
+
+![Kelvin–Helmholtz: vorticidad](figuras/kh_vorticidad.gif)
+
 ## Ejercicios
 
 1. Prueba `beta = 7` y `beta = 10` y compara la densidad mínima calculada con la exacta. Con
@@ -152,3 +188,22 @@ celdas mucho menores que su radio.
 2. Busca el mayor `cfl` con el que el esquema `muscl` no explota.
 3. Mide cuánto tarda `make run` con `n = 50, 100` y `200`. Al duplicar `n`, ¿por cuánto se
    multiplica el tiempo? Ten en cuenta que el número de pasos también se duplica.
+
+## Bibliografía
+
+- R. J. LeVeque, *Finite Volume Methods for Hyperbolic Problems*, Cambridge University Press, 2002.
+- E. F. Toro, *Riemann Solvers and Numerical Methods for Fluid Dynamics*, 3.ª ed., Springer, 2009.
+  Las ecuaciones de Euler, los flujos numéricos (Rusanov incluido) y los limitadores.
+- B. van Leer, «Towards the ultimate conservative difference scheme. V. A second-order sequel to
+  Godunov's method», *Journal of Computational Physics* 32 (1979), 101–136. El origen de MUSCL.
+- S. Gottlieb, C.-W. Shu y E. Tadmor, «Strong stability-preserving high-order time discretization
+  methods», *SIAM Review* 43 (2001), 89–112. El método de Heun visto como Runge–Kutta para leyes de
+  conservación.
+- C.-W. Shu, «Essentially non-oscillatory and weighted essentially non-oscillatory schemes for
+  hyperbolic conservation laws», en *Advanced Numerical Approximation of Nonlinear Hyperbolic
+  Equations*, Lecture Notes in Mathematics 1697, Springer, 1998, 325–432. Contiene el vórtice
+  isentrópico como problema de prueba.
+- P. G. Drazin, *Introduction to Hydrodynamic Stability*, Cambridge University Press, 2002. La
+  inestabilidad de Kelvin–Helmholtz.
+- D. Lecoanet et al., «A validated non-linear Kelvin–Helmholtz benchmark for numerical
+  hydrodynamics», *Monthly Notices of the Royal Astronomical Society* 455 (2016), 4274–4288.

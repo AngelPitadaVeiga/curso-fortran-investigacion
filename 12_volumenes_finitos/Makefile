@@ -4,6 +4,7 @@
 #     make run               el vórtice con el esquema de orden 2 (vortice.nml)
 #     make run-primer-orden  el mismo problema con el esquema de orden 1
 #     make run-orden         orden de convergencia de los dos esquemas
+#     make run-kh            inestabilidad de Kelvin-Helmholtz, con instantáneas para la película
 #     make clean
 
 FC     = gfortran
@@ -25,17 +26,17 @@ endif
 
 all: fluido$(EXE) orden_espacial$(EXE)
 
-fluido$(EXE): gas.o volumenes.o vortice.o fluido.o
-	$(FC) $(FFLAGS) gas.o volumenes.o vortice.o fluido.o -o fluido
+fluido$(EXE): gas.o volumenes.o casos.o fluido.o
+	$(FC) $(FFLAGS) gas.o volumenes.o casos.o fluido.o -o fluido
 
-orden_espacial$(EXE): gas.o volumenes.o vortice.o orden_espacial.o
-	$(FC) $(FFLAGS) gas.o volumenes.o vortice.o orden_espacial.o -o orden_espacial
+orden_espacial$(EXE): gas.o volumenes.o casos.o orden_espacial.o
+	$(FC) $(FFLAGS) gas.o volumenes.o casos.o orden_espacial.o -o orden_espacial
 
 %.o: %.f90
 	$(FC) $(FFLAGS) -c $<
 
-volumenes.o vortice.o: gas.o
-fluido.o orden_espacial.o: gas.o volumenes.o vortice.o
+volumenes.o casos.o: gas.o
+fluido.o orden_espacial.o: gas.o volumenes.o casos.o
 
 resultados:
 	$(CREAR_RESULTADOS)
@@ -48,6 +49,9 @@ run-primer-orden: fluido$(EXE) | resultados
 
 run-orden: orden_espacial$(EXE) | resultados
 	./orden_espacial
+
+run-kh: fluido$(EXE) | resultados
+	./fluido kelvin_helmholtz.nml
 
 clean:
 	$(BORRAR)

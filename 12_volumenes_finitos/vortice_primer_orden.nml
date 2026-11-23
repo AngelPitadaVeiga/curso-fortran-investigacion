@@ -1,5 +1,6 @@
 ! Lo mismo que vortice.nml, con el esquema de orden 1.
 &parametros
+    caso    = 'vortice'      ! 'vortice' o 'kelvin_helmholtz'
     n       = 100
     t_final = 10.0
     cfl     = 0.5

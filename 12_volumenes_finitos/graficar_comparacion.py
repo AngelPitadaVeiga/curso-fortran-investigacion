@@ -19,7 +19,7 @@ for nombre, color in colores.items():
     x, rho, rho_exacta = (a.reshape(n, n)[fila] for a in (x, rho, rho_exacta))
     corte.plot(x, rho, color=color, lw=2, label=nombre)
 
-    t, rho_min, error = np.loadtxt(f"resultados/{nombre}_historia.dat", unpack=True)
+    t, rho_min = np.loadtxt(f"resultados/{nombre}_historia.dat", usecols=(0, 1), unpack=True)
     historia.plot(t, rho_min, color=color, lw=2, label=nombre)
 
 corte.plot(x, rho_exacta, color="black", ls="--", lw=1.5, label="exacta")

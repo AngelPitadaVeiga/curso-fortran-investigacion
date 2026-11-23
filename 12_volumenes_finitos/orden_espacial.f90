@@ -9,7 +9,7 @@
 program orden_espacial
     use gas, only: conservadas
     use volumenes, only: paso_rk2, paso_maximo
-    use vortice, only: lado, vortice_exacto
+    use casos, only: lado, vortice_exacto
     implicit none
 
     integer, parameter :: n_mallas = 4, n_esquemas = 2
