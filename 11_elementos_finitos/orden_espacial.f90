@@ -11,6 +11,7 @@
 !>
 !> Se resuelve con mallas cada vez más finas y se mide el error máximo en los nodos.
 !> Con triángulos lineales debe dividirse por 4 al duplicar las casillas: orden 2.
+!> Escribe las casillas y los errores en resultados/orden.dat.
 !>
 !>     ./orden_espacial
 program orden_espacial
@@ -28,7 +29,7 @@ program orden_espacial
     integer, allocatable :: tri(:, :), libres(:)
     logical, allocatable :: fijo(:)
     double precision :: tol
-    integer :: i, j, n, nx
+    integer :: i, j, n, nx, unidad
 
     ! Constantes de Lamé de tensión plana.
     lambda = e_young * nu / (1 - nu**2)
@@ -76,6 +77,13 @@ program orden_espacial
         end if
         deallocate(f, fijo, u, ul)
     end do
+
+    open(newunit=unidad, file='resultados/orden.dat', status='replace', action='write')
+    write(unidad, '(a)') '#  casillas  error_maximo'
+    do j = 1, n_mallas
+        write(unidad, '(i8, es16.8)') 4 * 2**(j - 1), error(j)
+    end do
+    close(unidad)
 
     if (abs(orden - 2) > 0.3d0) then
         print '(a)', 'FALLA: el orden no es 2.'

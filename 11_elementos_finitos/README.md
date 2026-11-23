@@ -22,8 +22,15 @@ Cociente:                              0.954
 
 ![Viga deformada](figuras/deformada.png)
 
-El color es la tensión de von Mises: máxima en las caras superior e inferior junto al empotramiento y
-casi nula en la línea central, como predice la teoría de vigas.
+El color es la tensión de von Mises, una medida de la tensión en cada punto que se usa para saber si
+el material aguanta. En la figura siguiente se ve sobre la viga sin deformar y, debajo, en los
+triángulos de la cara superior:
+
+![Tensión de von Mises](figuras/von_mises.png)
+
+Es máxima en las caras superior e inferior junto al empotramiento, casi nula en la línea central y
+decrece linealmente hacia el extremo libre. La teoría de vigas da en la cara superior
+`σ = P (L - x) (ly/2) / I`, con `I = ly³/12`, y los elementos finitos quedan un 3 % por encima.
 
 ## Método
 
@@ -50,7 +57,7 @@ estática es `K u = f`.
 ├── solido.f90          programa principal
 ├── orden_espacial.f90  programa que mide el orden de convergencia
 ├── *.nml, Makefile
-└── graficar.py, graficar_vibracion.py
+└── graficar.py, graficar_orden.py, graficar_vibracion.py
 ```
 
 `solido` usa `malla`, `elasticidad`, `algebra` y `dinamica`; `dinamica` usa `algebra`; y
@@ -84,6 +91,7 @@ solución exacta es la elegida:
 
 ```bash
 make run-orden
+python graficar_orden.py
 ```
 
 ```
@@ -94,6 +102,8 @@ make run-orden
         32       1.2307E-03      1.99
 OK: orden 2.
 ```
+
+![Orden de convergencia](figuras/orden.png)
 
 ## Vibraciones
 
@@ -139,12 +149,10 @@ físico, fijan el paso, y son más altas cuanto más fina es la malla.
 
 ## Ejercicios
 
-1. Con `estatico.nml`, prueba mallas de 20 × 2, 40 × 4, 80 × 8 y 120 × 12, comprueba la tabla y anota
-   el tiempo de cada una.
-2. Duplica el espesor (`ly = 2`) y mide el cambio en la flecha; repite con doble longitud. La teoría
-   da una flecha proporcional a `L³ / ly³`.
+1. Con `estatico.nml`, prueba las mallas de 20 × 2, 40 × 4 y 80 × 8 y comprueba la tabla de la
+   flecha.
+2. Duplica el espesor (`ly = 2`). Según la teoría, la flecha es proporcional a `1 / ly³`: comprueba
+   que se divide aproximadamente por 8.
 3. En `vibracion_explicito.nml`, busca por tanteo el mayor `dt` que no explota y compáralo con el
-   calculado. Repite con una malla de 40 × 4.
-4. Pon `nu = 0.49` (casi incompresible) y observa el efecto sobre la flecha y sobre `ω_max`.
-5. Empotra también el lado derecho y calcula la deformación con una fuerza hacia abajo repartida por
-   todo el cuerpo (`m * g` en cada nodo).
+   que imprime el programa.
+4. Pon `nu = 0.49` y observa cómo cambia la flecha.

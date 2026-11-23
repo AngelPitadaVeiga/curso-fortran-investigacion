@@ -55,7 +55,7 @@ run-explicito: solido$(EXE) | resultados
 run-inestable: solido$(EXE) | resultados
 	./solido vibracion_inestable.nml
 
-run-orden: orden_espacial$(EXE)
+run-orden: orden_espacial$(EXE) | resultados
 	./orden_espacial
 
 clean:
