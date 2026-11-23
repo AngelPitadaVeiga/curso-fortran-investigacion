@@ -1,4 +1,4 @@
-# Unidad 04 · Arrays y archivos
+# Unidad 04. Arrays y archivos
 
 ```bash
 gfortran arrays.f90 -o arrays

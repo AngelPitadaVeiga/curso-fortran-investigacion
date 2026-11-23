@@ -1,4 +1,4 @@
-# Unidad 00 · Propaganda
+# Unidad 00. Propaganda
 
 Fortran no es más rápido que otros lenguajes compilados: bien escritos, Fortran y C++ producen el
 mismo código. La ventaja es que un programa de cálculo escrito de la forma más natural en Fortran

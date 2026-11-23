@@ -1,4 +1,4 @@
-# Unidad 01 · Instalación
+# Unidad 01. Instalación
 
 Hacen falta cuatro componentes: **gfortran**, **make**, **Python 3** con **numpy** y **matplotlib**, y
 **VS Code** con las extensiones *Modern Fortran*, *Python* y *Makefile Tools*. La instalación requiere

@@ -1,4 +1,4 @@
-# Unidad 09 · Runge–Kutta
+# Unidad 09. Runge–Kutta
 
 Cinco métodos en un módulo, elegidos desde el archivo de entrada:
 
@@ -127,7 +127,7 @@ Retraso respecto a la referencia a `t ≈ 3000`, en periodos (positivo es retras
 | `trapecio` | 0,006 | 0,58 |
 
 RK4 con `h = 0.1` (30 000 pasos) conserva la fase mejor que Euler con `h = 0.01` (300 000 pasos) y que
-Euler con `h = 0.0001` (3·10⁷ pasos, retraso de 0,03 periodos).
+Euler con `h = 0.0001` (3×10⁷ pasos, retraso de 0,03 periodos).
 
 ## Orden de convergencia
 

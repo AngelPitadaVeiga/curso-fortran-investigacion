@@ -1,4 +1,4 @@
-# Unidad 03 · Variables, tipos y bucles
+# Unidad 03. Variables, tipos y bucles
 
 ```bash
 gfortran tipos.f90 -o tipos

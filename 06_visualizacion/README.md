@@ -1,4 +1,4 @@
-# Unidad 06 · Visualización
+# Unidad 06. Visualización
 
 Fortran calcula y no dibuja. El programa escribe un archivo de datos y un script de Python lo
 convierte en figura, con matplotlib. (gnuplot también se usa con Fortran, pero su lenguaje solo sirve
@@ -85,12 +85,12 @@ recta, en escala logarítmica, y la línea gris marca el medio periodo:
 
 | `h` | pasos hasta `t = 3000` | `t` con medio periodo de retraso (explícito) | (implícito) |
 |---:|---:|---:|---:|
-| 0,01 | 3·10⁵ | 451 | 471 |
-| 0,001 | 3·10⁶ | 4549 | 4569 |
-| 0,0001 | 3·10⁷ | 45 548 | no medido |
+| 0,01 | 3×10⁵ | 451 | 471 |
+| 0,001 | 3×10⁶ | 4549 | 4569 |
+| 0,0001 | 3×10⁷ | 45 548 | no medido |
 
 Dividir `h` entre diez multiplica por diez el tiempo hasta perder la fase. Para llegar a `t = 3000` con
-un retraso de 0,01 periodos haría falta `h ≈ 3·10⁻⁵`, unos 10⁸ pasos (extrapolando la proporcionalidad
+un retraso de 0,01 periodos haría falta `h ≈ 3×10⁻⁵`, unos 10⁸ pasos (extrapolando la proporcionalidad
 medida). El implícito no mejora: su retraso es igual y de signo contrario. Para el ciclo límite de Van
 der Pol, Euler no es adecuado en tiempos largos, con ninguna de sus variantes y con ningún paso. RK4,
 en la unidad 09, consigue con `h = 0.01` un retraso inferior a 0,001 periodos.

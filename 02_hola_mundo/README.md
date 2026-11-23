@@ -1,4 +1,4 @@
-# Unidad 02 · Hola, mundo
+# Unidad 02. Hola, mundo
 
 ```fortran
 program hola

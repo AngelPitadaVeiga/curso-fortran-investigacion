@@ -1,4 +1,4 @@
-# Unidad 10 · Retrato de fases
+# Unidad 10. Retrato de fases
 
 Esta unidad usa el integrador para estudiar la dinámica. `modelo.f90` y `runge_kutta.f90` son los de
 la unidad 09; el único programa nuevo es `retrato.f90`.

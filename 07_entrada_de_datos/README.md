@@ -1,4 +1,4 @@
-# Unidad 07 · Entrada de datos
+# Unidad 07. Entrada de datos
 
 En la unidad 05, cambiar `mu`, `h` o `t_final` obliga a editar el código y recompilar. Aquí el mismo
 Euler explícito, en un solo archivo, lee sus parámetros de un archivo de texto.

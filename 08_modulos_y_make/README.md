@@ -1,4 +1,4 @@
-# Unidad 08 · Módulos y make
+# Unidad 08. Módulos y make
 
 El mismo Euler de la unidad anterior, con el mismo resultado, repartido en tres archivos:
 

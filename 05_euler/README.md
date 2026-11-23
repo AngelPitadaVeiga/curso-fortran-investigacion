@@ -1,4 +1,4 @@
-# Unidad 05 · Euler
+# Unidad 05. Euler
 
 Se integra el oscilador de Van der Pol,
 
