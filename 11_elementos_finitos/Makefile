@@ -1,8 +1,9 @@
 # Makefile de la unidad 11: dos programas (solido y orden_espacial) que comparten módulos.
 #
 #     make                 compila los dos programas
-#     make run             la viga bajo su carga (estática)
-#     make run-vibracion   la viga soltada desde esa deformación, con el método implícito
+#     make run             la ménsula bajo su carga (estática)
+#     make run-viga        una viga recta, para comparar con la teoría de vigas
+#     make run-vibracion   la ménsula soltada desde esa deformación, con el método implícito
 #     make run-explicito   lo mismo con el método explícito (con un paso estable)
 #     make run-inestable   y con un paso demasiado grande: explota
 #     make run-orden       orden de convergencia en el espacio
@@ -45,6 +46,9 @@ resultados:
 
 run: solido$(EXE) | resultados
 	./solido estatico.nml
+
+run-viga: solido$(EXE) | resultados
+	./solido viga.nml
 
 run-vibracion: solido$(EXE) | resultados
 	./solido vibracion.nml
