@@ -3,8 +3,9 @@
 Ángel Pita da Veiga Ramonde [angel.pitadaveiga@usc.es]
 Universidade de Santiago de Compostela (USC) y CITMAGA
 
-Curso de dos sesiones de un curso básico de introducción a FORTRAN enfocado a la investigación en Matemáticas. Empieza con un programa de una línea y termina con un código de elementos
-finitos en 2D que calcula la deformación y las vibraciones de una viga. Entre ambos extremos se integra
+Curso de dos sesiones de un curso básico de introducción a FORTRAN enfocado a la investigación en Matemáticas. Empieza con un programa de una línea y termina con dos códigos en 2D: uno de
+elementos finitos, que calcula la deformación y las vibraciones de una viga, y otro de volúmenes
+finitos, que sigue un vórtice en un gas. Entre ambos extremos se integra
 el oscilador de Van der Pol con Euler, con Runge–Kutta y con métodos implícitos; que se usan como excusa para explicar las funcionalidades de FORTRAN.
 
 ![Benchmark](00_propaganda/figuras/benchmark_i7-14700.png)
@@ -28,6 +29,7 @@ veinte minutos.
 - [09 · Runge–Kutta](09_runge_kutta/): más métodos, orden de convergencia y rigidez.
 - [10 · Retrato de fases](10_retrato_de_fases/): estudio de la dinámica con el integrador.
 - [11 · Elementos finitos](11_elementos_finitos/): una viga en 2D.
+- [12 · Volúmenes finitos](12_volumenes_finitos/): un vórtice en un gas, en 2D.
 - [Ejercicios](EJERCICIOS.md).
 - [Formatos de `print` y `write`](FORMATOS.md).
 

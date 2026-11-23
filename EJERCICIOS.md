@@ -162,16 +162,38 @@ los puntos de equilibrio estables e inestables.
 
 ## Elementos finitos (unidad 11)
 
-El [README de la unidad](11_elementos_finitos/README.md) tiene cinco ejercicios más.
+El [README de la unidad](11_elementos_finitos/README.md) tiene cuatro ejercicios más.
 
-**31. Coste de la resolución.** Mide con `system_clock` el tiempo de ensamblaje y el de Cholesky para
-mallas de 20 × 2, 40 × 4, 80 × 8 y 120 × 12. Dibuja los tiempos frente al número de incógnitas en
-escala logarítmica y mide las pendientes. ¿Cuál de las dos partes domina?
+**31. Tiempo de cálculo.** Mide con `time make run` (o con un cronómetro) cuánto tarda el caso
+estático con mallas de 20 × 2, 40 × 4 y 80 × 8. ¿Por cuánto se multiplica el tiempo cada vez que se
+duplica la malla?
 
-**32. Frecuencia de vibración.** A partir de los cruces por cero de la flecha del extremo, mide el
-periodo de la vibración con distintas mallas y compara con el de la teoría de vigas. Relaciona lo que
-obtienes con la tabla de la flecha estática.
+**32. Periodo de vibración.** En la figura de `graficar_vibracion.py`, mide el periodo de la flecha
+del extremo y compáralo con el de la teoría de vigas que imprime el programa. Repite con la malla de
+40 × 4.
 
-**33. Carga repartida.** Sustituye la fuerza en el extremo por una presión uniforme sobre la cara
-superior (reparte la fuerza total entre sus nodos) y compara la flecha con la de la teoría de vigas,
-`q L⁴ / (8 E I)`.
+**33. Más carga.** Multiplica `carga` por 10 en `estatico.nml`. Comprueba que la flecha y la tensión
+de von Mises también se multiplican por 10, como corresponde a un problema lineal.
+
+## Volúmenes finitos (unidad 12)
+
+El [README de la unidad](12_volumenes_finitos/README.md) tiene tres ejercicios más.
+
+**34. Ejecutar.** Compila con `make` y ejecuta `make run` y `make run-primer-orden`. Localiza los
+archivos que se han creado en `resultados/` y lee sus primeras líneas para saber qué contiene cada
+columna.
+
+**35. La densidad.** Escribe un script de Python que lea `resultados/muscl_campo.dat`, reorganice la
+densidad en una matriz de `n × n` (`reshape`) y la dibuje con `pcolormesh` y una barra de colores.
+Añade las curvas de nivel de la densidad exacta con `contour`.
+
+**36. Vorticidad.** Calcula la vorticidad `v_x - u_y` con `np.gradient` y dibújala. Compara su
+máximo con el exacto, `beta e^(1/2) / π`, en los dos esquemas.
+
+**37. Una película.** Modifica `fluido.f90` para que escriba el campo cada cierto tiempo
+(`dt_escritura` en el namelist, con un archivo distinto para cada instante). Dibuja los instantes con
+Python, guarda una imagen de cada uno y comprueba que el vórtice recorre la diagonal del cuadrado.
+
+**38. Error frente al tiempo.** La tercera columna de `resultados/*_historia.dat` es el error de la
+densidad. Dibújala frente al tiempo para los dos esquemas, en escala logarítmica en el eje vertical, y
+compara con la densidad mínima de `graficar_comparacion.py`.

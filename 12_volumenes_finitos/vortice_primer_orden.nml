@@ -1,0 +1,9 @@
+! Lo mismo que vortice.nml, con el esquema de orden 1.
+&parametros
+    n       = 100
+    t_final = 10.0
+    cfl     = 0.5
+    beta    = 5.0
+    esquema = 'primer_orden'
+    nombre  = 'primer_orden'
+/

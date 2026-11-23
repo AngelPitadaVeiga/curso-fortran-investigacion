@@ -26,6 +26,8 @@
 10_retrato_de_fases/retrato
 11_elementos_finitos/solido
 11_elementos_finitos/orden_espacial
+12_volumenes_finitos/fluido
+12_volumenes_finitos/orden_espacial
 01_instalacion/comprobacion
 00_propaganda/bin/
 

@@ -1,0 +1,9 @@
+! El vórtice isentrópico durante una vuelta completa (t = 10), con el esquema de orden 2.
+&parametros
+    n       = 100            ! celdas en cada dirección
+    t_final = 10.0
+    cfl     = 0.5            ! fracción del paso máximo estable
+    beta    = 5.0            ! intensidad del vórtice
+    esquema = 'muscl'        ! 'primer_orden' o 'muscl'
+    nombre  = 'muscl'        ! resultados/muscl_campo.dat y resultados/muscl_historia.dat
+/
